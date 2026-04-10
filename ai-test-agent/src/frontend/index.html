@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能体系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>AI智能体系统</h1>
+            <nav>
+                <ul>
+                    <li><a href="#document-process">文档处理</a></li>
+                    <li><a href="#clarification">需求澄清</a></li>
+                    <li><a href="#tech-doc">技术方案</a></li>
+                    <li><a href="#coding-tasks">编码任务</a></li>
+                    <li><a href="#test-cases">测试案例</a></li>
+                    <li><a href="#login" id="login-link">登录</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 登录模态框 -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>用户登录</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">邮箱</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <button type="submit" class="btn">登录</button>
+                    <p class="register-link">还没有账号？<a href="#register">立即注册</a></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- 注册模态框 -->
+        <div id="register-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>用户注册</h2>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">邮箱</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">密码</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <button type="submit" class="btn">注册</button>
+                    <p class="login-link">已有账号？<a href="#login">立即登录</a></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- 文档处理部分 -->
+        <section id="document-process" class="section">
+            <div class="container">
+                <h2>需求文档处理</h2>
+                <div class="card">
+                    <form id="document-form">
+                        <div class="form-group">
+                            <label for="document-file">上传文档</label>
+                            <input type="file" id="document-file" accept=".docx,.pdf,.md" required>
+                        </div>
+                        <button type="submit" class="btn">处理文档</button>
+                    </form>
+                    <div id="document-result" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 需求澄清部分 -->
+        <section id="clarification" class="section">
+            <div class="container">
+                <h2>需求澄清文档生成</h2>
+                <div class="card">
+                    <form id="clarification-form">
+                        <div class="form-group">
+                            <label for="structured-data">结构化需求数据</label>
+                            <textarea id="structured-data" rows="10" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">生成澄清文档</button>
+                    </form>
+                    <div id="clarification-result" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技术方案部分 -->
+        <section id="tech-doc" class="section">
+            <div class="container">
+                <h2>技术方案文档生成</h2>
+                <div class="card">
+                    <form id="tech-doc-form">
+                        <div class="form-group">
+                            <label for="tech-structured-data">结构化需求数据</label>
+                            <textarea id="tech-structured-data" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="clarification-doc">澄清文档（可选）</label>
+                            <textarea id="clarification-doc" rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="btn">生成技术方案</button>
+                    </form>
+                    <div id="tech-doc-result" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 编码任务部分 -->
+        <section id="coding-tasks" class="section">
+            <div class="container">
+                <h2>编码任务文档生成</h2>
+                <div class="card">
+                    <form id="tasks-form">
+                        <div class="form-group">
+                            <label for="tech-doc-input">技术方案文档</label>
+                            <textarea id="tech-doc-input" rows="10" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">生成编码任务</button>
+                    </form>
+                    <div id="tasks-result" class="result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 测试案例部分 -->
+        <section id="test-cases" class="section">
+            <div class="container">
+                <h2>测试案例脑图生成</h2>
+                <div class="card">
+                    <form id="test-cases-form">
+                        <div class="form-group">
+                            <label for="test-structured-data">结构化需求数据</label>
+                            <textarea id="test-structured-data" rows="5" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="test-tech-doc">技术方案文档</label>
+                            <textarea id="test-tech-doc" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">生成测试案例</button>
+                    </form>
+                    <div id="test-cases-result" class="result"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AI智能体系统. 保留所有权利.</p>
+        </div>
+    </footer>
+</body>
+</html>
