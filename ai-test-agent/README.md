@@ -36,6 +36,39 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
 - 明确每个测试点的测试步骤、预期结果、优先级及测试环境要求
 - 支持导出为常见脑图格式（.xmind、.mm），导出格式完整度不低于98%
 
+### 6. 知识库系统
+- 支持多种知识类型：需求、技术方案、澄清文档、编码任务、测试用例
+- 知识提取：从文档中自动提取知识实体
+- 向量搜索：集成FAISS向量数据库实现语义搜索
+- 混合查询：支持关键词和语义混合查询
+- 知识关系：支持知识实体之间的关系管理
+
+### 7. 反馈系统
+- 反馈收集：支持多种反馈类型和分类
+- 反馈分析：自动分析反馈趋势和问题
+- 反馈管理：支持反馈的增删改查
+- 反馈统计：提供反馈统计和分析报告
+
+### 8. 增强AI服务
+- 智能路由：根据性能、成本、可用性选择最优模型
+- 缓存机制：缓存常用请求，减少API调用
+- 性能跟踪：跟踪模型性能指标
+- 负载均衡：支持多模型负载均衡
+
+### 9. 提示词工程
+- 基础提示词生成：提供多种任务类型的提示词模板
+- 知识增强：基于知识库生成增强提示词
+- 自适应生成：根据用户偏好自适应调整提示词
+- 反馈改进：基于反馈改进提示词质量
+- 提示词优化：支持质量、效率、平衡三种优化模式
+
+### 10. AI Loop引擎
+- 完整的AI Loop流程实现
+- 数据收集 → 知识检索 → 提示词生成 → 模型推理 → 结果验证 → 反馈收集 → 知识更新
+- 性能指标跟踪
+- 自动知识更新
+- 错误处理和回退机制
+
 ## 技术架构
 
 ### 系统架构
@@ -45,11 +78,14 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
 - **操作审计**：记录用户操作历史和系统事件
 - **前端界面**：响应式设计，适配不同设备
 - **容器化部署**：支持Docker容器化部署
+- **AI Loop架构**：实现持续学习和改进的闭环系统
 
 ### 技术栈
 - **后端**：Python Flask框架
 - **数据库**：PostgreSQL
 - **AI集成**：支持OpenAI API，可配置化集成不同大语言模型
+- **向量数据库**：FAISS（可选）
+- **文本嵌入**：sentence-transformers（可选）
 - **前端**：HTML5 + CSS3 + JavaScript
 - **部署**：Docker + Docker Compose
 
@@ -62,23 +98,28 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
 6. **API模块**：提供RESTful API接口
 7. **认证模块**：实现用户认证和权限管理
 8. **审计模块**：记录用户操作和系统事件
+9. **知识库模块**：管理和检索知识实体
+10. **反馈模块**：收集和分析用户反馈
+11. **AI服务模块**：提供智能路由和缓存功能
+12. **提示词工程模块**：生成和优化提示词
+13. **AI Loop模块**：实现知识增强的推理流程
+
+## 环境要求
+
+- **Docker** 和 **Docker Compose**（推荐）
+- **Python 3.9+**（本地开发）
+- **PostgreSQL 13+**（本地开发）
+- **足够的存储空间**（至少 2GB）
+- **有效的API密钥**（OpenAI或Qwen）
 
 ## 安装与配置
 
-### 环境要求
-- Docker 和 Docker Compose
-- Python 3.9+
-- PostgreSQL 13+
-- 足够的存储空间（至少 2GB）
-
-### 安装步骤
-
-#### 方法一：使用 Docker Compose 部署
+### 方法一：使用 Docker Compose 部署
 
 1. **克隆代码仓库**
    ```bash
    git clone <repository-url>
-   cd ai-agent-system
+   cd ai-test-agent
    ```
 
 2. **配置环境变量**
@@ -99,6 +140,20 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
    # AI Model Configuration
    OPENAI_API_KEY=your-openai-api-key
    MODEL_NAME=gpt-3.5-turbo
+   
+   # Qwen Configuration
+   QWEN_API_KEY=your-qwen-api-key
+   QWEN_MODEL_NAME=qwen-turbo
+   QWEN_API_BASE=https://api.dashscope.aliyuncs.com/api/v1
+   QWEN_TIMEOUT=60
+
+   # Cache Configuration
+   CACHE_ENABLED=true
+   CACHE_TTL=3600
+
+   # Routing Configuration
+   ROUTING_STRATEGY=performance
+   LOAD_BALANCING=true
 
    # Logging Configuration
    LOG_LEVEL=INFO
@@ -115,7 +170,7 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
    docker-compose ps
    ```
 
-#### 方法二：本地开发部署
+### 方法二：本地开发部署
 
 1. **创建虚拟环境**
    ```bash
@@ -128,19 +183,32 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
    pip install -r requirements.txt
    ```
 
-3. **初始化数据库**
+3. **安装可选依赖**
+   ```bash
+   # 向量数据库支持
+   pip install faiss-cpu
+   
+   # 文本嵌入支持
+   pip install sentence-transformers
+   
+   # 性能监控支持
+   pip install psutil
+   ```
+
+4. **初始化数据库**
    ```bash
    python -c "from src.auth.database import init_db; init_db()"
    ```
 
-4. **启动开发服务器**
+5. **启动开发服务器**
    ```bash
    flask run
    ```
 
-## 使用方法
+## 使用指南
 
 ### 前端界面
+
 打开浏览器，访问 `http://localhost:5000`，使用前端界面进行操作：
 
 1. **文档处理**：上传需求文档，系统自动解析并提取结构化信息
@@ -150,6 +218,7 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
 5. **测试案例**：基于需求和技术方案，生成测试案例脑图
 
 ### API接口
+
 系统提供RESTful API接口，可通过HTTP请求调用：
 
 - **文档处理**：`POST /api/documents/process`
@@ -160,259 +229,251 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
 - **用户注册**：`POST /api/auth/register`
 - **用户登录**：`POST /api/auth/login`
 
-## API参考
+### 常见操作示例
 
-### 1. 文档处理接口
+#### 1. 文档处理
 
-**端点**：`POST /api/documents/process`
-
-**请求**：
-```
-Content-Type: multipart/form-data
-
-file: <文档文件>
+**示例请求**：
+```bash
+curl -X POST http://localhost:5000/api/documents/process \
+  -F "file=@requirements.md"
 ```
 
-**响应**：
+**示例响应**：
 ```json
 {
   "status": "success",
   "content": "文档内容",
   "structured_data": {
-    "sections": [],
-    "requirements": [],
-    "constraints": []
+    "sections": ["项目概述", "功能需求"],
+    "requirements": ["支持用户登录", "支持数据导出"],
+    "constraints": ["响应时间不超过2秒"]
   }
 }
 ```
 
-### 2. 需求澄清接口
+#### 2. 需求澄清
 
-**端点**：`POST /api/clarification/generate`
-
-**请求**：
-```json
-Content-Type: application/json
-
-{
-  "structured_data": {
-    "sections": [],
-    "requirements": [],
-    "constraints": []
-  }
-}
+**示例请求**：
+```bash
+curl -X POST http://localhost:5000/api/clarification/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "structured_data": {
+      "sections": ["项目概述", "功能需求"],
+      "requirements": ["支持用户登录", "支持数据导出"],
+      "constraints": ["响应时间不超过2秒"]
+    }
+  }'
 ```
 
-**响应**：
+**示例响应**：
 ```json
 {
   "status": "success",
   "clarification_doc": {
     "version": "1.0",
     "timestamp": 1234567890,
-    "ambiguous_points": [],
+    "ambiguous_points": ["用户登录方式未明确"],
     "conflicts": [],
-    "missing_information": [],
-    "suggestions": []
+    "missing_information": ["数据导出格式未指定"],
+    "suggestions": ["建议明确登录方式和导出格式"]
   }
 }
 ```
 
-### 3. 技术方案接口
+#### 3. 技术方案
 
-**端点**：`POST /api/tech-doc/generate`
-
-**请求**：
-```json
-Content-Type: application/json
-
-{
-  "structured_data": {
-    "sections": [],
-    "requirements": [],
-    "constraints": []
-  },
-  "clarification_doc": {
-    "ambiguous_points": [],
-    "conflicts": [],
-    "missing_information": [],
-    "suggestions": []
-  }
-}
+**示例请求**：
+```bash
+curl -X POST http://localhost:5000/api/tech-doc/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "structured_data": {
+      "sections": ["项目概述", "功能需求"],
+      "requirements": ["支持用户登录", "支持数据导出"],
+      "constraints": ["响应时间不超过2秒"]
+    },
+    "clarification_doc": {
+      "ambiguous_points": ["用户登录方式未明确"],
+      "conflicts": [],
+      "missing_information": ["数据导出格式未指定"],
+      "suggestions": ["建议明确登录方式和导出格式"]
+    }
+  }'
 ```
 
-**响应**：
+**示例响应**：
 ```json
 {
   "status": "success",
   "tech_doc": {
     "version": "1.0",
     "timestamp": 1234567890,
-    "architecture": {},
-    "tech_stack": {},
-    "core_modules": [],
-    "interface_design": {},
-    "data_flow": {},
-    "challenges": [],
-    "implementation": {},
-    "deployment": {}
+    "architecture": {
+      "type": "微服务架构",
+      "components": ["用户服务", "数据服务"]
+    },
+    "tech_stack": {
+      "backend": "Python Flask",
+      "database": "PostgreSQL"
+    },
+    "core_modules": ["认证模块", "导出模块"],
+    "interface_design": {
+      "rest_api": true,
+      "graphql": false
+    },
+    "data_flow": {
+      "login": "用户 → 认证服务 → 数据库",
+      "export": "用户 → 导出服务 → 存储"
+    },
+    "challenges": ["响应时间优化"],
+    "implementation": {
+      "estimated_time": "2周"
+    },
+    "deployment": {
+      "docker": true,
+      "kubernetes": false
+    }
   }
 }
 ```
 
-### 4. 编码任务接口
+## API文档
 
-**端点**：`POST /api/tasks/generate`
+### 详细API文档
 
-**请求**：
-```json
-Content-Type: application/json
+完整的API文档可通过以下方式访问：
 
-{
-  "tech_doc": {
-    "architecture": {},
-    "tech_stack": {},
-    "core_modules": [],
-    "interface_design": {},
-    "data_flow": {},
-    "challenges": [],
-    "implementation": {},
-    "deployment": {}
-  }
-}
+- **本地部署**：访问 `http://localhost:5000/api/docs`
+- **在线文档**：<https://example.com/api/docs>（占位）
+
+### API接口列表
+
+| 端点 | 方法 | 描述 |
+|------|------|------|
+| `/api/documents/process` | `POST` | 处理上传的文档 |
+| `/api/clarification/generate` | `POST` | 生成需求澄清文档 |
+| `/api/tech-doc/generate` | `POST` | 生成技术方案文档 |
+| `/api/tasks/generate` | `POST` | 生成编码任务 |
+| `/api/test-cases/generate` | `POST` | 生成测试案例 |
+| `/api/auth/register` | `POST` | 用户注册 |
+| `/api/auth/login` | `POST` | 用户登录 |
+
+## 项目资产管理
+
+### 资产文件夹结构
+
+项目使用结构化的资产文件夹 `assets/` 来系统保存项目全生命周期中的各类变更资产：
+
+```
+assets/
+├── requirements/     # 需求文档
+├── development/      # 开发报告和变更记录
+├── testing/          # 测试报告
+└── others/           # 其他相关资产
 ```
 
-**响应**：
-```json
-{
-  "status": "success",
-  "tasks": {
-    "version": "1.0",
-    "timestamp": 1234567890,
-    "tasks": [
-      {
-        "id": 1,
-        "name": "任务名称",
-        "description": "任务描述",
-        "technical_requirements": "技术要求",
-        "inputs_outputs": "输入输出",
-        "estimated_time": 4,
-        "dependencies": [],
-        "priority": "high"
-      }
-    ]
-  }
-}
-```
+### 资产存放规范
 
-### 5. 测试案例接口
+1. **需求文档** (`assets/requirements/`)
+   - 存放原始需求文档
+   - 存放需求澄清文档
+   - 命名规范：`YYYY-MM-DD-需求标题.md`
 
-**端点**：`POST /api/test-cases/generate`
+2. **开发报告** (`assets/development/`)
+   - 存放开发报告
+   - 存放变更记录
+   - 存放技术方案文档
+   - 命名规范：`YYYY-MM-DD-报告类型.md`
 
-**请求**：
-```json
-Content-Type: application/json
+3. **测试报告** (`assets/testing/`)
+   - 存放功能测试报告
+   - 存放性能测试报告
+   - 存放兼容性测试报告
+   - 命名规范：`YYYY-MM-DD-测试类型.md`
 
-{
-  "structured_data": {
-    "sections": [],
-    "requirements": [],
-    "constraints": []
-  },
-  "tech_doc": {
-    "architecture": {},
-    "tech_stack": {},
-    "core_modules": [],
-    "interface_design": {},
-    "data_flow": {},
-    "challenges": [],
-    "implementation": {},
-    "deployment": {}
-  }
-}
-```
+4. **其他资产** (`assets/others/`)
+   - 存放会议记录
+   - 存放设计文档
+   - 存放其他相关资料
+   - 命名规范：`YYYY-MM-DD-资产名称.md`
 
-**响应**：
-```json
-{
-  "status": "success",
-  "test_cases": {
-    "version": "1.0",
-    "timestamp": 1234567890,
-    "test_cases": [
-      {
-        "id": 1,
-        "name": "测试案例名称",
-        "type": "functional",
-        "steps": [],
-        "expected_results": [],
-        "priority": "high",
-        "environment": "测试环境"
-      }
-    ]
-  }
-}
-```
+### 查阅指引
 
-### 6. 用户认证接口
+1. **需求文档**：查看 `assets/requirements/` 目录下的文件
+2. **开发报告**：查看 `assets/development/` 目录下的文件
+3. **测试报告**：查看 `assets/testing/` 目录下的文件
+4. **其他资产**：查看 `assets/others/` 目录下的文件
 
-**注册端点**：`POST /api/auth/register`
+## 测试指南
 
-**请求**：
-```json
-Content-Type: application/json
+### 运行测试
 
-{
-  "username": "用户名",
-  "email": "邮箱",
-  "password": "密码"
-}
-```
+1. **功能测试**
+   ```bash
+   python tests/test_ai_loop_integration.py
+   ```
 
-**响应**：
-```json
-{
-  "status": "success",
-  "user": {
-    "id": 1,
-    "username": "用户名",
-    "email": "邮箱"
-  }
-}
-```
+2. **性能测试**
+   ```bash
+   python tests/test_performance.py
+   ```
 
-**登录端点**：`POST /api/auth/login`
+3. **兼容性测试**
+   ```bash
+   python tests/test_compatibility.py
+   ```
 
-**请求**：
-```json
-Content-Type: application/json
+4. **所有测试**
+   ```bash
+   python tests/test_ai_loop_integration.py && python tests/test_performance.py && python tests/test_compatibility.py
+   ```
 
-{
-  "email": "邮箱",
-  "password": "密码"
-}
-```
+### 测试覆盖范围
 
-**响应**：
-```json
-{
-  "status": "success",
-  "access_token": "JWT令牌",
-  "user": {
-    "id": 1,
-    "username": "用户名",
-    "email": "邮箱"
-  }
-}
-```
+- **功能测试**：验证所有核心功能是否正常工作
+- **性能测试**：测试系统在不同负载下的性能表现
+- **兼容性测试**：确保与现有功能的兼容性
+- **集成测试**：验证各模块间的集成是否正常
+
+## 故障排除
+
+### 常见问题
+
+1. **服务启动失败**
+   - 检查Docker服务是否运行
+   - 查看容器日志：`docker-compose logs`
+   - 检查端口是否被占用
+
+2. **API调用失败**
+   - 检查环境变量配置，特别是API密钥
+   - 验证网络连接
+   - 查看服务日志
+
+3. **数据库连接失败**
+   - 检查PostgreSQL服务是否运行
+   - 验证数据库连接字符串
+   - 检查数据库用户权限
+
+4. **前端无法访问**
+   - 检查服务是否正常启动
+   - 验证端口配置
+   - 检查防火墙设置
+
+5. **AI模型调用超时**
+   - 检查API密钥是否有效
+   - 验证网络连接
+   - 调整超时设置
 
 ## 贡献指南
 
 ### 开发流程
+
 1. **克隆代码仓库**
    ```bash
    git clone <repository-url>
-   cd ai-agent-system
+   cd ai-test-agent
    ```
 
 2. **创建分支**
@@ -434,7 +495,7 @@ Content-Type: application/json
 
 5. **运行测试**
    ```bash
-   pytest
+   python tests/test_ai_loop_integration.py
    ```
 
 6. **提交代码**
@@ -450,89 +511,30 @@ Content-Type: application/json
    - 等待代码审查
 
 ### 代码规范
+
 - 遵循PEP 8代码风格
 - 为所有函数和类添加文档字符串
 - 使用类型提示
 - 保持代码简洁明了
+- 遵循模块化设计原则
 
 ## 许可证信息
 
 本项目采用 MIT 许可证。详见 [LICENSE](LICENSE) 文件。
 
-## 快速开始
-
-### 环境要求
-- Docker 和 Docker Compose
-- Git
-
-### 安装步骤
-
-1. **克隆代码仓库**
-   ```bash
-   git clone <repository-url>
-   cd ai-agent-system
-   ```
-
-2. **配置环境变量**
-   复制 `.env` 文件并修改配置：
-   ```bash
-   cp .env.example .env
-   # 编辑 .env 文件，设置 OPENAI_API_KEY 等参数
-   ```
-
-3. **启动服务**
-   ```bash
-   docker-compose up -d
-   ```
-
-4. **验证服务**
-   ```bash
-   docker-compose ps
-   ```
-
-5. **访问系统**
-   打开浏览器，访问 `http://localhost:5000`
-
-### 测试验证
-
-1. **上传需求文档**
-   - 在前端界面的"文档处理"部分，上传一个需求文档（支持 .md、.docx、.pdf 格式）
-   - 点击"处理文档"按钮
-   - 查看处理结果，确认文档被正确解析
-
-2. **生成需求澄清文档**
-   - 在"需求澄清"部分，使用上一步的解析结果
-   - 点击"生成澄清文档"按钮
-   - 查看生成的澄清文档，确认识别出了模糊点和缺失信息
-
-3. **生成技术方案**
-   - 在"技术方案"部分，使用解析结果和澄清文档
-   - 点击"生成技术方案"按钮
-   - 查看生成的技术方案文档，确认包含了系统架构、技术栈等内容
-
-4. **生成编码任务**
-   - 在"编码任务"部分，使用技术方案文档
-   - 点击"生成编码任务"按钮
-   - 查看生成的编码任务，确认任务拆分合理
-
-5. **生成测试案例**
-   - 在"测试案例"部分，使用解析结果和技术方案文档
-   - 点击"生成测试案例"按钮
-   - 查看生成的测试案例，确认覆盖了功能、性能、兼容性和安全测试
-
-### 故障排除
-
-- **服务启动失败**：检查Docker服务是否运行，查看容器日志
-- **API调用失败**：检查环境变量配置，特别是OPENAI_API_KEY
-- **数据库连接失败**：检查PostgreSQL服务是否运行，验证数据库连接字符串
-- **前端无法访问**：检查端口是否被占用，确认服务是否正常启动
-
 ## 联系方式
 
-- 项目维护者：<maintainer@example.com>
-- 技术支持：<support@example.com>
-- 文档地址：<https://example.com/docs>
+- **项目维护者**：<maintainer@example.com>
+- **技术支持**：<support@example.com>
+- **文档地址**：<https://example.com/docs>
+- **GitHub仓库**：<https://github.com/example/ai-test-agent>
+
+## 版本历史
+
+- **1.0.0** (2026-04-22)：初始版本，包含完整的AI智能体系统功能
 
 ---
 
-**注意**：本系统需要有效的OpenAI API密钥才能使用AI功能。在生产环境部署时，应确保API密钥的安全存储和使用。
+**注意**：本系统需要有效的API密钥才能使用AI功能。在生产环境部署时，应确保API密钥的安全存储和使用。
+
+**免责声明**：本系统仅供参考和学习使用，实际生产环境部署时请根据具体需求进行适当调整。
