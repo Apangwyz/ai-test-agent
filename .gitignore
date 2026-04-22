@@ -9943,3 +9943,7 @@ ai-test-agent/venv/lib/python3.10/site-packages/torch-1.13.1.dist-info/RECORD
 ai-test-agent/venv/lib/python3.10/site-packages/torch-1.13.1.dist-info/REQUESTED
 ai-test-agent/venv/lib/python3.10/site-packages/torch-1.13.1.dist-info/top_level.txt
 ai-test-agent/venv/lib/python3.10/site-packages/torch-1.13.1.dist-info/WHEEL
+ai-test-agent/PET_ERROR_FIX.md
+ai-test-agent/PET_FIX_README.md
+ai-test-agent/test_qwen_integration.py
+ai-test-agent/test_pet.py

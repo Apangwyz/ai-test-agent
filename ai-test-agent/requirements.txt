@@ -18,6 +18,9 @@ spacy==3.5.0
 openai==0.27.0
 # Qwen model integration
 dashscope==1.14.0
+# Vector database and embeddings
+faiss-cpu==1.7.4
+sentence-transformers==2.2.2
 
 # Database
 sqlalchemy==1.4.46

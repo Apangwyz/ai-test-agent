@@ -1,0 +1,20 @@
+{
+  "id": "c245222c-9c07-462a-9346-dceb45f39dea",
+  "type": "requirement",
+  "title": "并发测试需求 2-3",
+  "content": "这是线程 2 的第 3 个并发测试需求",
+  "source": "concurrent_test",
+  "metadata": {},
+  "tags": [
+    "test",
+    "concurrent"
+  ],
+  "status": "active",
+  "version": "1.0",
+  "created_at": "2026-04-22T17:22:43.147896",
+  "updated_at": "2026-04-22T17:22:43.147896",
+  "created_by": "system",
+  "embedding": null,
+  "confidence_score": 1.0,
+  "related_entities": []
+}

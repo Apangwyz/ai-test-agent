@@ -28,8 +28,19 @@ class AIService:
         
         if self.qwen_api_key:
             dashscope.api_key = self.qwen_api_key
+        
+        # Try to import enhanced AI service
+        try:
+            from .enhanced_ai_service import enhanced_ai_service
+            self.enhanced_service = enhanced_ai_service
+            self.use_enhanced = True
+            self.logger.info("Enhanced AI service loaded successfully")
+        except ImportError:
+            self.enhanced_service = None
+            self.use_enhanced = False
+            self.logger.warning("Enhanced AI service not available, using basic service")
     
-    def generate(self, prompt, system_prompt, model_type='qwen', temperature=0.3):
+    def generate(self, prompt, system_prompt, model_type='qwen', temperature=0.3, use_enhanced=None):
         """
         Generate content using the specified model
         
@@ -38,11 +49,17 @@ class AIService:
             system_prompt (str): System prompt
             model_type (str): Model type ('qwen' or 'openai')
             temperature (float): Temperature for generation
+            use_enhanced (bool): Whether to use enhanced service (optional)
             
         Returns:
             str: Generated content
         """
         try:
+            # Use enhanced service if available and requested
+            if self.use_enhanced and (use_enhanced is None or use_enhanced):
+                return self.enhanced_service.generate(prompt, system_prompt, model_type, temperature)
+            
+            # Fall back to basic service
             if model_type == 'qwen' and self.qwen_api_key:
                 return self._generate_with_qwen(prompt, system_prompt, temperature)
             elif model_type == 'openai' and self.openai_api_key:
@@ -101,6 +118,17 @@ class AIService:
         except Exception as e:
             self.logger.error(f"Error calling OpenAI API: {e}")
             raise
+    
+    def get_service_stats(self):
+        """获取服务统计信息"""
+        if self.use_enhanced and self.enhanced_service:
+            return self.enhanced_service.get_service_stats()
+        else:
+            return {
+                'enhanced_service': False,
+                'basic_service': True,
+                'last_updated': None
+            }
 
 # Create singleton instance
 ai_service = AIService()

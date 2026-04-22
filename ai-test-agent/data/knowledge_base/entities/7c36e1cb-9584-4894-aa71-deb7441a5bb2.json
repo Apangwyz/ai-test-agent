@@ -1,0 +1,20 @@
+{
+  "id": "7c36e1cb-9584-4894-aa71-deb7441a5bb2",
+  "type": "technical",
+  "title": "集成测试技术知识",
+  "content": "这是用于集成测试的技术知识",
+  "source": "integration_test",
+  "metadata": {},
+  "tags": [
+    "test",
+    "integration"
+  ],
+  "status": "active",
+  "version": "1.0",
+  "created_at": "2026-04-22T17:48:03.579677",
+  "updated_at": "2026-04-22T17:48:03.579680",
+  "created_by": "system",
+  "embedding": null,
+  "confidence_score": 1.0,
+  "related_entities": []
+}

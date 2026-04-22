@@ -1,0 +1,22 @@
+{
+  "id": "68934ae5-f705-4dc1-adf7-8d4bc7b84402",
+  "type": "requirement",
+  "title": "这是一个测试文档，包含需求信息：系统需要支持用户登录功能",
+  "content": "这是一个测试文档，包含需求信息：系统需要支持用户登录功能",
+  "source": "document_content",
+  "metadata": {
+    "extraction_method": "sentence_classification",
+    "sentence_length": 28
+  },
+  "tags": [
+    "requirement"
+  ],
+  "status": "active",
+  "version": "1.0",
+  "created_at": "2026-04-22T17:37:38.959074",
+  "updated_at": "2026-04-22T17:37:38.959077",
+  "created_by": "system",
+  "embedding": null,
+  "confidence_score": 0.6,
+  "related_entities": []
+}

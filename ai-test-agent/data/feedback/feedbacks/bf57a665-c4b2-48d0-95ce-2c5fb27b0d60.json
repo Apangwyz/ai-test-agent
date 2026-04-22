@@ -1,0 +1,24 @@
+{
+  "id": "bf57a665-c4b2-48d0-95ce-2c5fb27b0d60",
+  "user_id": "performance_test_user_40",
+  "feedback_type": "positive",
+  "category": "user_experience",
+  "priority": "low",
+  "status": "pending",
+  "title": "性能测试反馈 40",
+  "description": "这是第 40 个性能测试反馈",
+  "rating": 4,
+  "tags": [
+    "test",
+    "performance"
+  ],
+  "related_entity_id": null,
+  "related_entity_type": null,
+  "metadata": {},
+  "created_at": "2026-04-22T17:22:42.759647",
+  "updated_at": "2026-04-22T17:22:42.759647",
+  "resolved_at": null,
+  "response": null,
+  "responded_by": null,
+  "responded_at": null
+}

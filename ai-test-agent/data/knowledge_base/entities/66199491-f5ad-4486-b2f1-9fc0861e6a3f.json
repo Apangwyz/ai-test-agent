@@ -1,0 +1,20 @@
+{
+  "id": "66199491-f5ad-4486-b2f1-9fc0861e6a3f",
+  "type": "requirement",
+  "title": "性能测试需求 45",
+  "content": "这是第 45 个性能测试需求描述",
+  "source": "performance_test",
+  "metadata": {},
+  "tags": [
+    "test",
+    "performance"
+  ],
+  "status": "active",
+  "version": "1.0",
+  "created_at": "2026-04-22T17:22:42.733495",
+  "updated_at": "2026-04-22T17:22:42.733496",
+  "created_by": "system",
+  "embedding": null,
+  "confidence_score": 1.0,
+  "related_entities": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": "81687d23-3654-4ae5-ab94-4fba3ec2edb1",
+  "type": "requirement",
+  "title": "并发测试需求 8-9",
+  "content": "这是线程 8 的第 9 个并发测试需求",
+  "source": "concurrent_test",
+  "metadata": {},
+  "tags": [
+    "test",
+    "concurrent"
+  ],
+  "status": "active",
+  "version": "1.0",
+  "created_at": "2026-04-22T17:22:43.156728",
+  "updated_at": "2026-04-22T17:22:43.156728",
+  "created_by": "system",
+  "embedding": null,
+  "confidence_score": 1.0,
+  "related_entities": []
+}
