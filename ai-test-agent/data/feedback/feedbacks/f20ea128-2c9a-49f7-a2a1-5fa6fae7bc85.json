@@ -1,0 +1,27 @@
+{
+  "id": "f20ea128-2c9a-49f7-a2a1-5fa6fae7bc85",
+  "user_id": "integration_test",
+  "feedback_type": "negative",
+  "category": "system_performance",
+  "priority": "high",
+  "status": "pending",
+  "title": "AI Loop结果验证失败",
+  "description": "验证消息：生成内容为空或过短",
+  "rating": 2,
+  "tags": [
+    "auto_feedback",
+    "validation_failed"
+  ],
+  "related_entity_id": null,
+  "related_entity_type": null,
+  "metadata": {
+    "task_type": "technical_solution",
+    "validation_score": 0
+  },
+  "created_at": "2026-04-23T17:00:55.915988",
+  "updated_at": "2026-04-23T17:00:55.915989",
+  "resolved_at": null,
+  "response": null,
+  "responded_by": null,
+  "responded_at": null
+}
