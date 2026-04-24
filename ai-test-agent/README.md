@@ -104,6 +104,203 @@ AI智能体系统是一个功能完整的智能体平台，以可配置化方式
 12. **提示词工程模块**：生成和优化提示词
 13. **AI Loop模块**：实现知识增强的推理流程
 
+## 快速开始
+
+### 1. 环境准备要求
+
+#### 1.1 必要依赖项
+- **Docker** 和 **Docker Compose**（推荐部署方式）
+- **Python 3.9+**（本地开发）
+- **PostgreSQL 13+**（本地开发）
+- **足够的存储空间**（至少 2GB）
+- **有效的API密钥**（OpenAI或Qwen）
+
+#### 1.2 依赖包版本
+- **Flask** 2.0+
+- **SQLAlchemy** 1.4+
+- **Flask-RESTful** 0.3.9+
+- **Flask-JWT-Extended** 4.4+
+- **PyPDF2** 2.0+
+- **python-docx** 0.8.11+
+- **mistune** 2.0+
+- **openai** 0.27.0+
+- **requests** 2.28.0+
+- **faiss-cpu** 1.7.4+（可选，向量数据库支持）
+- **sentence-transformers** 2.2.2+（可选，文本嵌入支持）
+
+### 2. 配置大模型API密钥
+
+#### 2.1 获取API密钥
+
+**OpenAI API密钥**：
+1. 访问 [OpenAI官网](https://platform.openai.com/)
+2. 登录或注册账号
+3. 进入 "API Keys" 页面
+4. 点击 "Create new secret key"
+5. 复制生成的API密钥
+
+**Qwen API密钥**：
+1. 访问 [阿里云DashScope](https://dashscope.aliyun.com/)
+2. 登录或注册账号
+3. 进入 "API密钥" 页面
+4. 点击 "创建API密钥"
+5. 复制生成的API密钥
+
+#### 2.2 存储位置
+
+在项目根目录创建 `.env` 文件，将API密钥存储其中：
+
+```
+# AI Model Configuration
+OPENAI_API_KEY=your-openai-api-key
+
+# Qwen Configuration
+QWEN_API_KEY=your-qwen-api-key
+```
+
+#### 2.3 安全注意事项
+- **切勿**将API密钥提交到版本控制系统
+- **切勿**在前端代码中暴露API密钥
+- **建议**使用环境变量或密钥管理服务存储API密钥
+- **定期**轮换API密钥以提高安全性
+- **监控**API密钥的使用情况，防止滥用
+
+### 3. 大模型类型选择与配置
+
+#### 3.1 支持的模型列表
+
+| 模型类型 | 支持的模型 | 提供商 |
+|---------|-----------|--------|
+| OpenAI | gpt-3.5-turbo, gpt-4, gpt-4-turbo | OpenAI |
+| Qwen | qwen-turbo, qwen-plus, qwen-max | 阿里云 |
+
+#### 3.2 模型特性对比
+
+| 模型 | 优势 | 劣势 | 适用场景 |
+|------|------|------|----------|
+| gpt-3.5-turbo | 速度快、成本低 | 推理能力一般 | 一般文本处理、快速响应 |
+| gpt-4 | 推理能力强、准确性高 | 速度较慢、成本高 | 复杂任务、技术方案生成 |
+| qwen-turbo | 响应速度快、中文支持好 | 上下文窗口较小 | 中文文本处理、实时交互 |
+| qwen-max | 上下文窗口大、多语言支持 | 成本较高 | 长文档处理、多轮对话 |
+
+#### 3.3 配置参数说明
+
+在 `.env` 文件中配置模型参数：
+
+```
+# AI Model Configuration
+OPENAI_API_KEY=your-openai-api-key
+MODEL_NAME=gpt-3.5-turbo
+
+# Qwen Configuration
+QWEN_API_KEY=your-qwen-api-key
+QWEN_MODEL_NAME=qwen-turbo
+QWEN_API_BASE=https://api.dashscope.aliyuncs.com/api/v1
+QWEN_TIMEOUT=60
+
+# Routing Configuration
+ROUTING_STRATEGY=performance  # 可选: performance, cost, availability
+LOAD_BALANCING=true
+```
+
+### 4. 项目初始化命令
+
+#### 4.1 Docker Compose 部署（推荐）
+
+1. **克隆代码仓库**
+   ```bash
+   git clone <repository-url>
+   cd ai-test-agent
+   ```
+
+2. **配置环境变量**
+   编辑 `.env` 文件，设置API密钥和其他配置
+
+3. **构建和启动服务**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+4. **查看服务状态**
+   ```bash
+   docker-compose ps
+   ```
+
+#### 4.2 本地开发部署
+
+1. **创建虚拟环境**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+2. **安装依赖**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **初始化数据库**
+   ```bash
+   python -c "from src.auth.database import init_db; init_db()"
+   ```
+
+4. **启动开发服务器**
+   ```bash
+   flask run
+   ```
+
+### 5. 验证配置成功
+
+#### 5.1 测试方法
+
+1. **检查服务状态**
+   - Docker部署：`docker-compose ps`
+   - 本地部署：访问 `http://localhost:5000`
+
+2. **测试API接口**
+   ```bash
+   curl -X POST http://localhost:5000/api/auth/register \
+     -H "Content-Type: application/json" \
+     -d '{"username": "testuser", "email": "test@example.com", "password": "password123"}'
+   ```
+
+3. **测试AI模型连接**
+   ```bash
+   curl -X POST http://localhost:5000/api/clarification/generate \
+     -H "Content-Type: application/json" \
+     -d '{"structured_data": {"sections": ["项目概述"], "requirements": ["支持用户登录"], "constraints": []}}'
+   ```
+
+#### 5.2 预期输出结果
+
+**用户注册响应**：
+```json
+{
+  "status": "success",
+  "message": "User registered successfully",
+  "user_id": 1
+}
+```
+
+**AI模型测试响应**：
+```json
+{
+  "status": "success",
+  "clarification_doc": {
+    "version": "1.0",
+    "timestamp": 1234567890,
+    "ambiguous_points": ["用户登录方式未明确"],
+    "conflicts": [],
+    "missing_information": [],
+    "suggestions": ["建议明确登录方式，如用户名密码、邮箱验证或第三方登录"]
+  }
+}
+```
+
+**服务状态检查**：
+- Docker部署：所有服务显示 "Up" 状态
+- 本地部署：浏览器显示系统欢迎页面
+
 ## 环境要求
 
 - **Docker** 和 **Docker Compose**（推荐）
