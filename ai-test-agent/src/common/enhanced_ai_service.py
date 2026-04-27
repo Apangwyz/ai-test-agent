@@ -6,6 +6,7 @@ import logging
 import time
 import hashlib
 import json
+import builtins
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -314,7 +315,7 @@ class EnhancedAIService:
             # 检查磁盘缓存
             cache_file = self.cache_dir / f"{cache_key}.json"
             if cache_file.exists():
-                with open(cache_file, 'r', encoding='utf-8') as f:
+                with builtins.open(cache_file, 'r', encoding='utf-8') as f:
                     cache_data = json.load(f)
                 
                 expires_at = datetime.fromisoformat(cache_data['expires_at']) if cache_data.get('expires_at') else None
@@ -367,7 +368,7 @@ class EnhancedAIService:
                 'temperature': temperature
             }
             
-            with open(cache_file, 'w', encoding='utf-8') as f:
+            with builtins.open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(cache_data, f, ensure_ascii=False, indent=2)
             
             self.cache_stats['size'] = len(self.memory_cache)
@@ -380,7 +381,7 @@ class EnhancedAIService:
         try:
             for cache_file in self.cache_dir.glob("*.json"):
                 try:
-                    with open(cache_file, 'r', encoding='utf-8') as f:
+                    with builtins.open(cache_file, 'r', encoding='utf-8') as f:
                         cache_data = json.load(f)
                     
                     expires_at = datetime.fromisoformat(cache_data['expires_at']) if cache_data.get('expires_at') else None
@@ -409,7 +410,7 @@ class EnhancedAIService:
         try:
             perf_file = self.cache_dir / "performance.json"
             if perf_file.exists():
-                with open(perf_file, 'r', encoding='utf-8') as f:
+                with builtins.open(perf_file, 'r', encoding='utf-8') as f:
                     perf_data = json.load(f)
                 
                 for model_name, data in perf_data.items():
@@ -441,7 +442,7 @@ class EnhancedAIService:
                 }
             
             perf_file = self.cache_dir / "performance.json"
-            with open(perf_file, 'w', encoding='utf-8') as f:
+            with builtins.open(perf_file, 'w', encoding='utf-8') as f:
                 json.dump(perf_data, f, ensure_ascii=False, indent=2)
             
             self.logger.info("Saved performance data")
