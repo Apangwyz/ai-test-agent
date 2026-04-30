@@ -1,0 +1,29 @@
+[
+  {
+    "entity_id": "3947d154-7d85-46fd-b752-f6bcfb64f57d",
+    "version": 1,
+    "timestamp": "2026-04-30T09:48:53.392957",
+    "action": "create",
+    "user_id": "admin_user",
+    "snapshot": {
+      "id": "3947d154-7d85-46fd-b752-f6bcfb64f57d",
+      "type": "domain_knowledge",
+      "title": "测试实体",
+      "content": "这是一个测试知识实体的内容",
+      "source": "test",
+      "metadata": {},
+      "tags": [
+        "test",
+        "unit_test"
+      ],
+      "status": "active",
+      "version": "1.0",
+      "created_at": "2026-04-30T09:48:53.391168",
+      "updated_at": "2026-04-30T09:48:53.391172",
+      "created_by": "system",
+      "embedding": null,
+      "confidence_score": 1.0,
+      "related_entities": []
+    }
+  }
+]

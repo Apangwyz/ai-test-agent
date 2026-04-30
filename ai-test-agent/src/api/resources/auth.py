@@ -1,6 +1,8 @@
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from src.auth.auth_service import AuthService
+from datetime import datetime
+import os
 
 class RegisterResource(Resource):
     def post(self):
@@ -27,7 +29,7 @@ class RegisterResource(Resource):
             }, 201
             
         except Exception as e:
-            return {'error': f'Error registering user: {str(e)}'}, 500
+            return self._error_response('AUTH_ERROR', str(e)), 500
 
 class LoginResource(Resource):
     def post(self):
@@ -43,12 +45,16 @@ class LoginResource(Resource):
             auth_service = AuthService()
             user = auth_service.login(args['email'], args['password'])
             
-            # Create access token
+            # Create access and refresh tokens
             access_token = create_access_token(identity=user.id)
+            refresh_token = create_refresh_token(identity=user.id)
+            expires_in = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', '3600'))
             
             return {
                 'status': 'success',
                 'access_token': access_token,
+                'refresh_token': refresh_token,
+                'expires_in': expires_in,
                 'user': {
                     'id': user.id,
                     'username': user.username,
@@ -57,4 +63,32 @@ class LoginResource(Resource):
             }, 200
             
         except Exception as e:
-            return {'error': f'Error logging in: {str(e)}'}, 401
+            return self._error_response('AUTH_ERROR', str(e)), 401
+
+class RefreshResource(Resource):
+    @jwt_required(refresh=True)
+    def post(self):
+        """
+        Refresh access token using refresh token
+        """
+        try:
+            user_id = get_jwt_identity()
+            access_token = create_access_token(identity=user_id)
+            expires_in = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', '3600'))
+            
+            return {
+                'status': 'success',
+                'access_token': access_token,
+                'expires_in': expires_in
+            }, 200
+            
+        except Exception as e:
+            return self._error_response('AUTH_ERROR', str(e)), 401
+    
+    def _error_response(self, code, message):
+        return {
+            'status': 'error',
+            'code': code,
+            'message': message,
+            'timestamp': datetime.now().isoformat()
+        }

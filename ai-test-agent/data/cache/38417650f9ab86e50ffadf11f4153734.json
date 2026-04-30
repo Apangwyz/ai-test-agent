@@ -1,0 +1,9 @@
+{
+  "key": "38417650f9ab86e50ffadf11f4153734",
+  "content": "您好，您提到“并发测试请求1”，但当前未提供具体的上下文、待测系统信息、测试目标（如接口URL、QPS要求、压测时长、预期指标）、可用工具（如JMeter、k6、wrk、Locust）或相关知识内容。\n\n为高质量完成该任务，我需要以下关键信息来精准支持：\n\n✅ 必需信息（请补充）：\n- 被测服务详情：API端点（如 `https://api.example.com/v1/users`）、HTTP方法（GET/POST等）、必要请求头（如 `Authorization: Bearer xxx`）及示例请求体（若为POST）；\n- 并发规模：期望的并发用户数（如 100 users）或目标吞吐量（如 50 RPS）；\n- 测试场景：是否含登录鉴权、会话保持、参数化（如不同用户ID）、思考时间、错误重试策略等；\n- 成功标准：响应时间 P95 < 500ms？错误率 < 0.5%？系统资源阈值（CPU < 70%）？\n- 环境说明：测试环境是预发/压测环境？是否已隔离、具备监控（Prometheus/Grafana）？\n\n🔍 若您已提供“相关知识”但未在消息中显示，请重新粘贴（例如：某微服务架构图、OpenAPI规范片段、JMeter脚本片段、性能基线报告等），我将据此定制方案。\n\n📌 示例增强输出（供参考）：\n> 基于您提供的Spring Boot服务OpenAPI文档（/auth/login POST），我们可构建k6脚本：  \n> - 使用`--vus 200 --duration 5m`模拟200并发；  \n> - 参数化1000个测试账号（CSV加载）；  \n> - 添加JWT鉴权链路与300ms随机思考时间；  \n> - 断言：status==200 && jsonpath(\"$.token\") != null；  \n> - 输出P90响应时间、失败率、服务端GC次数（通过Micrometer暴露的/actuator/metrics/jvm.gc.pause）。\n\n请补充上述任一关键信息，我将立即为您生成可执行的并发测试方案（含完整脚本、监控建议、结果分析模板）。期待您的进一步输入！",
+  "created_at": "2026-04-30T09:53:04.280979",
+  "expires_at": "2026-04-30T10:53:04.280961",
+  "access_count": 0,
+  "model_type": "qwen",
+  "temperature": 0.3
+}

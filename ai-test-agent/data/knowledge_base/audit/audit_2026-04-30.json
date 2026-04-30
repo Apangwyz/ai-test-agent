@@ -1,0 +1,41 @@
+[
+  {
+    "id": "audit_1777513733.394139_2941315574480366420",
+    "action": "create",
+    "user_id": "admin_user",
+    "resource_type": "entity",
+    "resource_id": "test_entity_id",
+    "details": {
+      "test": "value"
+    },
+    "timestamp": "2026-04-30T09:48:53.394151",
+    "ip_address": "",
+    "user_agent": ""
+  },
+  {
+    "id": "audit_1777513758.86086_2293393634492703388",
+    "action": "create",
+    "user_id": "admin_user",
+    "resource_type": "entity",
+    "resource_id": "test_entity_id",
+    "details": {
+      "test": "value"
+    },
+    "timestamp": "2026-04-30T09:49:18.860873",
+    "ip_address": "",
+    "user_agent": ""
+  },
+  {
+    "id": "audit_1777513786.743741_-630413130500000530",
+    "action": "create",
+    "user_id": "admin_user",
+    "resource_type": "entity",
+    "resource_id": "test_entity_id",
+    "details": {
+      "test": "value"
+    },
+    "timestamp": "2026-04-30T09:49:46.743754",
+    "ip_address": "",
+    "user_agent": ""
+  }
+]

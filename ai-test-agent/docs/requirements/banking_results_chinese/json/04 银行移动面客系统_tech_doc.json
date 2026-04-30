@@ -2,16 +2,17 @@
   "version": "1.0",
   "timestamp": 1777436639.691921,
   "architecture": {
-    "content": "subgraph Client Layer\n"
+    "content": "subgraph B[接入网关层]\n"
   },
   "tech_stack": {
-    "content": "To be defined"
+    "content": "|--------------|-----------------------------------|----------------------------------------|------|----------|----------------------------|\n"
   },
   "core_modules": [
-    "To be defined"
+    "- **监管就绪（Regulation-First）**：所有组件默认启用等保三级配置模板（如TLS 1.3强制、密码套件白名单、日志保留≥180天）。",
+    "- **双栈并行（Dual-Stack）**：生产环境主栈为信创栈（Q3闭环），公有云为灾备/灰度栈；**代码零差异，配置驱动适配**。"
   ],
   "interface_design": {
-    "content": "TXS -->|ISO8583 over MQ| CORE[核心银行\n"
+    "content": "| **后端语言** | Java 17 + Spring Boot 3.2         | 生态成熟度(30%)、信创中间件兼容(40%)、性能(30%) | 94   | ✅ **Java** | 东方通TongWeb 7.0完全兼容；达梦DM8 JDBC驱动官方认证；GC调优后P95延迟≤120ms\n"
   },
   "data_flow": {
     "content": "To be defined"

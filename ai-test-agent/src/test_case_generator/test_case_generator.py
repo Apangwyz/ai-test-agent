@@ -119,24 +119,56 @@ class TestCaseGenerator:
         # Parse content into structured test cases
         lines = content.split('\n')
         current_test = None
+        valid_tests_count = 0
         
         for line in lines:
             line = line.strip()
             if not line:
                 continue
             
-            # Check for test case ID
-            if line.startswith('Test Case') or line.startswith('1.') or line.startswith('2.'):
-                if current_test:
+            # Check for test case ID - more flexible pattern
+            is_test_case_start = (
+                line.startswith('Test Case') or 
+                line.startswith('1.') or 
+                line.startswith('2.') or 
+                line.startswith('3.') or 
+                line.startswith('4.') or 
+                line.startswith('5.') or
+                line.startswith('### 1.') or
+                line.startswith('### 2.') or
+                line.startswith('### 3.') or
+                line.startswith('### 4.') or
+                line.startswith('### 5.')
+            )
+            
+            if is_test_case_start:
+                if current_test and current_test.get('name'):
+                    # Only add test if it has a valid name
                     test_cases['test_cases'].append(current_test)
+                    valid_tests_count += 1
+                
+                # Extract test case name
+                test_name = line
+                # Clean up the name
+                if '###' in test_name:
+                    test_name = test_name.replace('###', '').strip()
+                if '.' in test_name and len(test_name.split('.')[0].strip()) <= 3:
+                    test_name = '.'.join(test_name.split('.')[1:]).strip()
+                
+                # Skip invalid test names that don't look like real test cases
+                skip_keywords = ['诊断', '说明', '模板', '框架', '填充', '计划', '填充需求', '计划']
+                if any(kw in test_name for kw in skip_keywords):
+                    current_test = None
+                    continue
+                
                 current_test = {
-                    'id': line.split('.')[0] if '.' in line else len(test_cases['test_cases']) + 1,
-                    'name': line.split('.')[1].strip() if '.' in line else line,
-                    'type': 'functional',  # Default type
+                    'id': len(test_cases['test_cases']) + 1,
+                    'name': test_name,
+                    'type': 'functional',
                     'steps': [],
                     'expected_results': [],
-                    'priority': 'medium',  # Default priority
-                    'environment': 'Standard test environment'
+                    'priority': 'medium',
+                    'environment': '标准测试环境'
                 }
             elif current_test:
                 # Parse test case details - support both English and Chinese keywords
@@ -144,29 +176,46 @@ class TestCaseGenerator:
                     type_value = line.split(':', 1)[1].strip() if ':' in line else line
                     current_test['type'] = self._normalize_test_type(type_value)
                 elif ('step' in line.lower() and 's' in line.lower()) or '步骤' in line:
-                    # Extract test steps
-                    if 'steps' not in current_test:
-                        current_test['steps'] = []
-                    step_text = line.split(':', 1)[1].strip() if ':' in line else line
-                    current_test['steps'].append(step_text)
+                    # Extract test steps - handle steps that don't have colon
+                    step_text = line
+                    if ':' in line:
+                        step_text = line.split(':', 1)[1].strip()
+                    if step_text and not any(kw in step_text.lower() for kw in ['step', '步骤']):
+                        current_test['steps'].append(step_text)
                 elif ('expected' in line.lower() and 'result' in line.lower()) or '预期结果' in line:
                     # Extract expected results
-                    if 'expected_results' not in current_test:
-                        current_test['expected_results'] = []
-                    result_text = line.split(':', 1)[1].strip() if ':' in line else line
-                    current_test['expected_results'].append(result_text)
+                    result_text = line
+                    if ':' in line:
+                        result_text = line.split(':', 1)[1].strip()
+                    if result_text and not any(kw in result_text.lower() for kw in ['expected', '预期']):
+                        current_test['expected_results'].append(result_text)
                 elif 'priority' in line.lower() or '优先级' in line:
                     priority_value = line.split(':', 1)[1].strip() if ':' in line else line
                     current_test['priority'] = self._normalize_priority(priority_value)
                 elif 'environment' in line.lower() or '环境' in line:
-                    current_test['environment'] = line.split(':', 1)[1].strip() if ':' in line else line
+                    env_text = line.split(':', 1)[1].strip() if ':' in line else line
+                    # Translate common English environments to Chinese
+                    env_translations = {
+                        'Any browser': '任何浏览器',
+                        'Multiple browsers': '多种浏览器',
+                        'Performance testing environment': '性能测试环境',
+                        'Standard test environment': '标准测试环境'
+                    }
+                    current_test['environment'] = env_translations.get(env_text, env_text)
+                else:
+                    # If it's a line without a keyword, add to steps if we're in a test
+                    if current_test.get('name') and len(current_test.get('steps', [])) == 0:
+                        # First content after test case is likely a step
+                        if not any(kw in line.lower() for kw in ['type', '优先级', '环境', 'step', 'expected']):
+                            current_test['steps'].append(line)
         
-        # Add the last test case
-        if current_test:
+        # Add the last valid test case
+        if current_test and current_test.get('name'):
             test_cases['test_cases'].append(current_test)
+            valid_tests_count += 1
         
-        # Add default test cases if none found
-        if not test_cases['test_cases']:
+        # Add default test cases if no valid tests found
+        if valid_tests_count == 0:
             test_cases['test_cases'] = self._get_default_test_cases_list()
         
         return test_cases

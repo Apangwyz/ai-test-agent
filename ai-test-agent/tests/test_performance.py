@@ -1,450 +1,200 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import logging
+"""
+性能测试用例
+"""
+import pytest
 import time
-import threading
-from datetime import datetime
-from typing import List, Dict, Any
+import logging
+import concurrent.futures
+from src.ai_loop.engine import AILoopEngine
+from src.knowledge_base import knowledge_manager, cache_manager, KnowledgeEntity, KnowledgeQuery, KnowledgeType
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
-class PerformanceTester:
-    """性能测试器"""
+class TestPerformance:
+    """性能测试类"""
     
-    def __init__(self):
-        self.logger = logging.getLogger(__name__)
-        self.test_results = []
-    
-    def test_knowledge_base_performance(self):
-        """测试知识库性能"""
-        logger.info("=== 测试知识库性能 ===")
+    def setup_method(self):
+        """设置测试环境"""
+        self.engine = AILoopEngine()
+        self.engine.reset_performance_metrics()
         
-        try:
-            from src.knowledge_base import knowledge_manager, KnowledgeEntity, KnowledgeType, KnowledgeQuery, query_service
-            
-            # 测试1: 批量插入性能
-            logger.info("测试1: 批量插入性能")
-            start_time = time.time()
-            
-            entities = []
-            for i in range(100):
-                entity = KnowledgeEntity(
-                    type=KnowledgeType.REQUIREMENT,
-                    title=f"性能测试需求 {i}",
-                    content=f"这是第 {i} 个性能测试需求描述",
-                    source="performance_test",
-                    tags=["test", "performance"]
-                )
-                entities.append(entity)
-            
-            for entity in entities:
-                knowledge_manager.add_entity(entity)
-            
-            insert_time = time.time() - start_time
-            logger.info(f"✓ 批量插入100个实体耗时: {insert_time:.3f}s")
-            logger.info(f"  平均每个实体: {insert_time/100*1000:.2f}ms")
-            
-            # 测试2: 查询性能
-            logger.info("测试2: 查询性能")
-            start_time = time.time()
-            
-            query = KnowledgeQuery(
-                query_text="性能测试",
-                query_type="keyword",
-                limit=10
+        # 添加测试数据
+        self.test_entities = []
+        for i in range(100):
+            entity = KnowledgeEntity(
+                type=KnowledgeType.DOMAIN_KNOWLEDGE,
+                title=f"性能测试实体{i}",
+                content=f"这是性能测试实体{i}的内容，用于测试知识库查询性能。" * 10,
+                source="performance_test",
+                tags=["performance", "test"]
             )
-            
-            for _ in range(50):
-                query_service.query(query)
-            
-            query_time = time.time() - start_time
-            logger.info(f"✓ 执行50次查询耗时: {query_time:.3f}s")
-            logger.info(f"  平均每次查询: {query_time/50*1000:.2f}ms")
-            
-            # 测试3: 获取统计信息性能
-            logger.info("测试3: 获取统计信息性能")
-            start_time = time.time()
-            
-            for _ in range(20):
-                knowledge_manager.get_statistics()
-            
-            stats_time = time.time() - start_time
-            logger.info(f"✓ 执行20次统计查询耗时: {stats_time:.3f}s")
-            logger.info(f"  平均每次统计: {stats_time/20*1000:.2f}ms")
-            
-            self.test_results.append({
-                'module': 'knowledge_base',
-                'insert_time': insert_time,
-                'query_time': query_time,
-                'stats_time': stats_time,
-                'status': 'passed'
-            })
-            
-            logger.info("=== 知识库性能测试完成 ===\n")
-            return True
-            
-        except Exception as e:
-            logger.error(f"✗ 知识库性能测试失败: {e}")
-            self.test_results.append({
-                'module': 'knowledge_base',
-                'status': 'failed',
-                'error': str(e)
-            })
-            return False
+            knowledge_manager.add_entity(entity, "admin_user")
+            self.test_entities.append(entity)
     
-    def test_feedback_system_performance(self):
-        """测试反馈系统性能"""
-        logger.info("=== 测试反馈系统性能 ===")
-        
-        try:
-            from src.feedback import feedback_manager, feedback_collector, FeedbackType, FeedbackCategory
-            
-            # 测试1: 批量反馈收集性能
-            logger.info("测试1: 批量反馈收集性能")
-            start_time = time.time()
-            
-            feedbacks_data = []
-            for i in range(50):
-                feedback_data = {
-                    'user_id': f'performance_test_user_{i}',
-                    'feedback_type': 'positive',
-                    'category': 'user_experience',
-                    'title': f'性能测试反馈 {i}',
-                    'description': f'这是第 {i} 个性能测试反馈',
-                    'rating': 4,
-                    'tags': ['test', 'performance']
-                }
-                feedbacks_data.append(feedback_data)
-            
-            for feedback_data in feedbacks_data:
-                feedback_collector.collect_feedback(feedback_data)
-            
-            collect_time = time.time() - start_time
-            logger.info(f"✓ 收集50个反馈耗时: {collect_time:.3f}s")
-            logger.info(f"  平均每个反馈: {collect_time/50*1000:.2f}ms")
-            
-            # 测试2: 反馈分析性能
-            logger.info("测试2: 反馈分析性能")
-            start_time = time.time()
-            
-            from src.feedback import feedback_analyzer
-            for _ in range(10):
-                feedback_analyzer.analyze_feedbacks(days=30)
-            
-            analysis_time = time.time() - start_time
-            logger.info(f"✓ 执行10次反馈分析耗时: {analysis_time:.3f}s")
-            logger.info(f"  平均每次分析: {analysis_time/10*1000:.2f}ms")
-            
-            self.test_results.append({
-                'module': 'feedback_system',
-                'collect_time': collect_time,
-                'analysis_time': analysis_time,
-                'status': 'passed'
-            })
-            
-            logger.info("=== 反馈系统性能测试完成 ===\n")
-            return True
-            
-        except Exception as e:
-            logger.error(f"✗ 反馈系统性能测试失败: {e}")
-            self.test_results.append({
-                'module': 'feedback_system',
-                'status': 'failed',
-                'error': str(e)
-            })
-            return False
+    def teardown_method(self):
+        """清理测试环境"""
+        for entity in self.test_entities:
+            knowledge_manager.delete_entity(entity.id, "admin_user")
     
-    def test_prompt_generation_performance(self):
-        """测试提示词生成性能"""
-        logger.info("=== 测试提示词生成性能 ===")
+    def test_ai_loop_throughput(self):
+        """测试AI Loop引擎吞吐量"""
+        start_time = time.time()
+        request_count = 5
         
-        try:
-            from src.prompt_engineering import prompt_generator
-            
-            # 测试1: 基础提示词生成性能
-            logger.info("测试1: 基础提示词生成性能")
-            start_time = time.time()
-            
-            for _ in range(100):
-                prompt_generator.generate_prompt(
-                    task_type='requirement_analysis',
-                    context='系统需要支持用户管理功能',
-                    use_knowledge=False
-                )
-            
-            basic_prompt_time = time.time() - start_time
-            logger.info(f"✓ 生成100个基础提示词耗时: {basic_prompt_time:.3f}s")
-            logger.info(f"  平均每个提示词: {basic_prompt_time/100*1000:.2f}ms")
-            
-            # 测试2: 知识增强提示词生成性能
-            logger.info("测试2: 知识增强提示词生成性能")
-            start_time = time.time()
-            
-            for _ in range(50):
-                prompt_generator.generate_prompt(
-                    task_type='technical_solution',
-                    context='设计一个用户管理系统',
-                    use_knowledge=True
-                )
-            
-            enhanced_prompt_time = time.time() - start_time
-            logger.info(f"✓ 生成50个知识增强提示词耗时: {enhanced_prompt_time:.3f}s")
-            logger.info(f"  平均每个提示词: {enhanced_prompt_time/50*1000:.2f}ms")
-            
-            # 测试3: 自适应提示词生成性能
-            logger.info("测试3: 自适应提示词生成性能")
-            start_time = time.time()
-            
-            for _ in range(50):
-                prompt_generator.generate_adaptive_prompt(
-                    task_type='clarification',
-                    context='需求描述不够清晰',
-                    user_preferences={'detailed_output': True}
-                )
-            
-            adaptive_prompt_time = time.time() - start_time
-            logger.info(f"✓ 生成50个自适应提示词耗时: {adaptive_prompt_time:.3f}s")
-            logger.info(f"  平均每个提示词: {adaptive_prompt_time/50*1000:.2f}ms")
-            
-            self.test_results.append({
-                'module': 'prompt_generation',
-                'basic_prompt_time': basic_prompt_time,
-                'enhanced_prompt_time': enhanced_prompt_time,
-                'adaptive_prompt_time': adaptive_prompt_time,
-                'status': 'passed'
-            })
-            
-            logger.info("=== 提示词生成性能测试完成 ===\n")
-            return True
-            
-        except Exception as e:
-            logger.error(f"✗ 提示词生成性能测试失败: {e}")
-            self.test_results.append({
-                'module': 'prompt_generation',
-                'status': 'failed',
-                'error': str(e)
-            })
-            return False
+        for i in range(request_count):
+            request_data = {
+                'task_type': 'general',
+                'context': f'性能测试请求{i}',
+                'user_id': 'test_user'
+            }
+            self.engine.process_request(request_data)
+        
+        end_time = time.time()
+        duration = end_time - start_time
+        
+        print(f"\n=== AI Loop吞吐量测试 ===")
+        print(f"请求数量: {request_count}")
+        print(f"总耗时: {duration:.2f}秒")
+        print(f"吞吐量: {request_count/duration:.2f} 请求/秒")
+        print(f"平均响应时间: {duration/request_count*1000:.2f} 毫秒")
+        
+        # AI调用需要时间，设置较宽松的阈值
+        assert duration < 180, f"吞吐量测试超时，耗时{duration:.2f}秒"
     
-    def test_concurrent_performance(self):
-        """测试并发性能"""
-        logger.info("=== 测试并发性能 ===")
+    def test_knowledge_base_query_performance(self):
+        """测试知识库查询性能"""
+        query = KnowledgeQuery(
+            query_text="性能测试",
+            query_type="keyword",
+            limit=10,
+            threshold=0.5
+        )
         
-        try:
-            from src.knowledge_base import knowledge_manager, KnowledgeEntity, KnowledgeType
-            
-            # 测试并发插入性能
-            logger.info("测试1: 并发插入性能")
-            
-            def insert_entities(thread_id: int):
-                for i in range(10):
-                    entity = KnowledgeEntity(
-                        type=KnowledgeType.REQUIREMENT,
-                        title=f"并发测试需求 {thread_id}-{i}",
-                        content=f"这是线程 {thread_id} 的第 {i} 个并发测试需求",
-                        source="concurrent_test",
-                        tags=["test", "concurrent"]
-                    )
-                    knowledge_manager.add_entity(entity)
-            
-            start_time = time.time()
-            threads = []
-            
-            for i in range(10):
-                thread = threading.Thread(target=insert_entities, args=(i,))
-                threads.append(thread)
-                thread.start()
-            
-            for thread in threads:
-                thread.join()
-            
-            concurrent_time = time.time() - start_time
-            logger.info(f"✓ 10个线程并发插入100个实体耗时: {concurrent_time:.3f}s")
-            logger.info(f"  平均每个实体: {concurrent_time/100*1000:.2f}ms")
-            
-            # 测试并发查询性能
-            logger.info("测试2: 并发查询性能")
-            
-            from src.knowledge_base import query_service, KnowledgeQuery
-            
-            def query_entities(thread_id: int):
-                query = KnowledgeQuery(
-                    query_text="并发测试",
-                    query_type="keyword",
-                    limit=10
-                )
-                for _ in range(10):
-                    query_service.query(query)
-            
-            start_time = time.time()
-            threads = []
-            
-            for i in range(10):
-                thread = threading.Thread(target=query_entities, args=(i,))
-                threads.append(thread)
-                thread.start()
-            
-            for thread in threads:
-                thread.join()
-            
-            concurrent_query_time = time.time() - start_time
-            logger.info(f"✓ 10个线程并发执行100次查询耗时: {concurrent_query_time:.3f}s")
-            logger.info(f"  平均每次查询: {concurrent_query_time/100*1000:.2f}ms")
-            
-            self.test_results.append({
-                'module': 'concurrent_performance',
-                'concurrent_insert_time': concurrent_time,
-                'concurrent_query_time': concurrent_query_time,
-                'status': 'passed'
-            })
-            
-            logger.info("=== 并发性能测试完成 ===\n")
-            return True
-            
-        except Exception as e:
-            logger.error(f"✗ 并发性能测试失败: {e}")
-            self.test_results.append({
-                'module': 'concurrent_performance',
-                'status': 'failed',
-                'error': str(e)
-            })
-            return False
+        # 预热
+        knowledge_manager.query_entities(query, "admin_user")
+        
+        # 实际测试
+        start_time = time.time()
+        query_count = 50
+        
+        for i in range(query_count):
+            knowledge_manager.query_entities(query, "admin_user")
+        
+        end_time = time.time()
+        duration = end_time - start_time
+        
+        print(f"\n=== 知识库查询性能测试 ===")
+        print(f"查询次数: {query_count}")
+        print(f"总耗时: {duration:.2f}秒")
+        print(f"吞吐量: {query_count/duration:.2f} 查询/秒")
+        print(f"平均响应时间: {duration/query_count*1000:.2f} 毫秒")
+        
+        assert duration < 10, f"知识库查询性能测试超时，耗时{duration:.2f}秒"
     
-    def test_memory_usage(self):
-        """测试内存使用"""
-        logger.info("=== 测试内存使用 ===")
+    def test_cache_performance(self):
+        """测试缓存性能"""
+        # 设置缓存
+        for i in range(50):
+            cache_manager.set_entity(f"cache_test_{i}", {"data": f"value_{i}"})
         
-        try:
-            import psutil
-            import os
-            
-            process = psutil.Process(os.getpid())
-            
-            # 测试前内存使用
-            initial_memory = process.memory_info().rss / 1024 / 1024  # MB
-            logger.info(f"初始内存使用: {initial_memory:.2f} MB")
-            
-            # 执行一些操作
-            from src.knowledge_base import knowledge_manager, KnowledgeEntity, KnowledgeType, query_service, KnowledgeQuery
-            
-            # 创建大量实体
-            for i in range(1000):
-                entity = KnowledgeEntity(
-                    type=KnowledgeType.REQUIREMENT,
-                    title=f"内存测试需求 {i}",
-                    content=f"这是第 {i} 个内存测试需求描述" * 10,
-                    source="memory_test",
-                    tags=["test", "memory"]
-                )
-                knowledge_manager.add_entity(entity)
-            
-            # 执行查询
-            query = KnowledgeQuery(
-                query_text="内存测试",
-                query_type="keyword",
-                limit=50
+        # 测试缓存命中性能
+        start_time = time.time()
+        access_count = 100
+        
+        for i in range(access_count):
+            cache_manager.get_entity(f"cache_test_{i % 50}")
+        
+        end_time = time.time()
+        duration = end_time - start_time
+        
+        stats = cache_manager.get_stats()
+        
+        print(f"\n=== 缓存性能测试 ===")
+        print(f"访问次数: {access_count}")
+        print(f"总耗时: {duration:.2f}秒")
+        print(f"吞吐量: {access_count/duration:.2f} 访问/秒")
+        print(f"平均响应时间: {duration/access_count*1000:.2f} 毫秒")
+        print(f"缓存命中率: {stats['hits']/(stats['hits']+stats['misses'])*100:.2f}%")
+        
+        assert duration < 1, f"缓存性能测试超时，耗时{duration:.2f}秒"
+    
+    def test_concurrent_requests(self):
+        """测试并发请求处理"""
+        def process_request(i):
+            request_data = {
+                'task_type': 'general',
+                'context': f'并发测试请求{i}',
+                'user_id': 'test_user'
+            }
+            return self.engine.process_request(request_data)
+        
+        start_time = time.time()
+        concurrent_count = 5
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=concurrent_count) as executor:
+            futures = [executor.submit(process_request, i) for i in range(concurrent_count)]
+            results = [f.result() for f in futures]
+        
+        end_time = time.time()
+        duration = end_time - start_time
+        
+        success_count = sum(1 for r in results if r.get('success', False))
+        
+        print(f"\n=== 并发请求测试 ===")
+        print(f"并发数: {concurrent_count}")
+        print(f"总耗时: {duration:.2f}秒")
+        print(f"成功率: {success_count/concurrent_count*100:.2f}%")
+        
+        assert success_count == concurrent_count, f"并发请求测试失败，成功{success_count}/{concurrent_count}"
+    
+    def test_entity_crud_performance(self):
+        """测试实体CRUD性能"""
+        # 测试创建性能
+        start_time = time.time()
+        create_count = 20
+        created_ids = []
+        
+        for i in range(create_count):
+            entity = KnowledgeEntity(
+                type=KnowledgeType.DOMAIN_KNOWLEDGE,
+                title=f"CRUD测试实体{i}",
+                content=f"CRUD测试内容{i}",
+                source="crud_test"
             )
-            query_service.query(query)
-            
-            # 测试后内存使用
-            final_memory = process.memory_info().rss / 1024 / 1024  # MB
-            memory_increase = final_memory - initial_memory
-            
-            logger.info(f"最终内存使用: {final_memory:.2f} MB")
-            logger.info(f"内存增加: {memory_increase:.2f} MB")
-            logger.info(f"平均每个实体内存: {memory_increase/1000*1024:.2f} KB")
-            
-            self.test_results.append({
-                'module': 'memory_usage',
-                'initial_memory': initial_memory,
-                'final_memory': final_memory,
-                'memory_increase': memory_increase,
-                'status': 'passed'
-            })
-            
-            logger.info("=== 内存使用测试完成 ===\n")
-            return True
-            
-        except ImportError:
-            logger.warning("⚠ psutil未安装，跳过内存使用测试")
-            return True
-        except Exception as e:
-            logger.error(f"✗ 内存使用测试失败: {e}")
-            self.test_results.append({
-                'module': 'memory_usage',
-                'status': 'failed',
-                'error': str(e)
-            })
-            return False
-    
-    def generate_performance_report(self) -> Dict[str, Any]:
-        """生成性能测试报告"""
-        report = {
-            'test_time': datetime.now().isoformat(),
-            'total_tests': len(self.test_results),
-            'passed_tests': sum(1 for result in self.test_results if result.get('status') == 'passed'),
-            'failed_tests': sum(1 for result in self.test_results if result.get('status') == 'failed'),
-            'test_results': self.test_results
-        }
+            entity_id = knowledge_manager.add_entity(entity, "admin_user")
+            created_ids.append(entity_id)
         
-        # 计算性能指标
-        performance_metrics = {}
-        for result in self.test_results:
-            if result.get('status') == 'passed':
-                module = result['module']
-                performance_metrics[module] = {
-                    key: value for key, value in result.items() 
-                    if key not in ['module', 'status', 'error']
-                }
+        create_duration = time.time() - start_time
         
-        report['performance_metrics'] = performance_metrics
+        # 测试读取性能
+        start_time = time.time()
+        for entity_id in created_ids:
+            knowledge_manager.get_entity(entity_id, "admin_user")
+        read_duration = time.time() - start_time
         
-        return report
+        # 测试更新性能
+        start_time = time.time()
+        for entity_id in created_ids:
+            knowledge_manager.update_entity(entity_id, {"title": "更新后"}, "admin_user")
+        update_duration = time.time() - start_time
+        
+        # 测试删除性能
+        start_time = time.time()
+        for entity_id in created_ids:
+            knowledge_manager.delete_entity(entity_id, "admin_user")
+        delete_duration = time.time() - start_time
+        
+        print(f"\n=== 实体CRUD性能测试 ===")
+        print(f"操作数量: {create_count}")
+        print(f"创建耗时: {create_duration:.2f}秒 ({create_count/create_duration:.2f}/秒)")
+        print(f"读取耗时: {read_duration:.2f}秒 ({create_count/read_duration:.2f}/秒)")
+        print(f"更新耗时: {update_duration:.2f}秒 ({create_count/update_duration:.2f}/秒)")
+        print(f"删除耗时: {delete_duration:.2f}秒 ({create_count/delete_duration:.2f}/秒)")
+        
+        assert create_duration < 5, f"创建性能测试超时"
+        assert read_duration < 2, f"读取性能测试超时"
+        assert update_duration < 3, f"更新性能测试超时"
+        assert delete_duration < 2, f"删除性能测试超时"
 
-def main():
-    """主测试函数"""
-    logger.info("开始AI Loop性能测试\n")
-    logger.info(f"测试时间: {datetime.now().isoformat()}\n")
-    
-    tester = PerformanceTester()
-    
-    # 执行各项性能测试
-    tester.test_knowledge_base_performance()
-    tester.test_feedback_system_performance()
-    tester.test_prompt_generation_performance()
-    tester.test_concurrent_performance()
-    tester.test_memory_usage()
-    
-    # 生成性能报告
-    report = tester.generate_performance_report()
-    
-    # 输出测试结果
-    logger.info("\n=== 性能测试结果汇总 ===")
-    logger.info(f"总测试数: {report['total_tests']}")
-    logger.info(f"通过测试: {report['passed_tests']}")
-    logger.info(f"失败测试: {report['failed_tests']}")
-    logger.info(f"成功率: {report['passed_tests']/report['total_tests']*100:.1f}%")
-    
-    logger.info("\n=== 性能指标详情 ===")
-    for module, metrics in report['performance_metrics'].items():
-        logger.info(f"\n{module}:")
-        for key, value in metrics.items():
-            if 'time' in key:
-                logger.info(f"  {key}: {value:.3f}s")
-            elif 'memory' in key:
-                logger.info(f"  {key}: {value:.2f} MB")
-            else:
-                logger.info(f"  {key}: {value}")
-    
-    if report['passed_tests'] == report['total_tests']:
-        logger.info("\n🎉 所有性能测试通过！")
-        return 0
-    else:
-        logger.info(f"\n⚠ 有 {report['failed_tests']} 个测试失败")
-        return 1
-
-if __name__ == "__main__":
-    exit(main())
+if __name__ == '__main__':
+    pytest.main([__file__, '-v'])

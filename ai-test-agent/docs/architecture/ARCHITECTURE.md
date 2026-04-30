@@ -29,8 +29,12 @@ graph TD
 graph TD
     AILoop[AI循环引擎] --> AIService[AI服务]
     AILoop --> EnhancedAIService[增强AI服务]
+    AILoop --> Retry[重试机制]
+    AILoop --> Feedback[反馈处理]
+    AILoop --> Metrics[性能指标]
     AIService --> PromptGen[提示词生成器]
     EnhancedAIService --> PromptGen
+    Feedback --> AILoop
 ```
 
 ### 1.3 生成器模块
@@ -59,6 +63,15 @@ graph TD
     KBManager[知识库管理器] --> KBExtractor[知识提取器]
     KBManager --> KBQuery[查询服务]
     KBQuery --> KBVector[向量存储]
+    KBManager --> Cache[缓存管理器]
+    KBManager --> Permissions[权限管理器]
+    KBManager --> Version[版本控制]
+    KBManager --> Audit[审计日志]
+    KBVector --> Internal[内部存储]
+    KBVector --> Milvus[Milvus适配器]
+    KBVector --> Pinecone[Pinecone适配器]
+    KBVector --> Weaviate[Weaviate适配器]
+    KBVector --> ChromaDB[ChromaDB适配器]
 ```
 
 ### 1.6 反馈系统模块
@@ -189,9 +202,15 @@ graph TD
 | **前端层** | 用户界面，提供交互入口 | HTML/CSS/JavaScript |
 | **API层** | 提供RESTful接口，处理HTTP请求 | Flask-RESTful |
 | **核心服务** | 提供AI能力和提示词生成 | AI服务、增强AI服务、提示词生成器 |
+| **AI Loop引擎** | 多轮迭代优化、动态提示词调整、重试机制、性能指标跟踪 | 迭代优化器、提示词调整策略、重试管理器、指标收集器 |
 | **生成器模块** | 生成各类文档和任务 | 澄清文档、技术文档、编码任务、测试用例生成器 |
 | **文档处理** | 处理不同格式的文档 | PDF、DOCX、Markdown处理器 |
 | **知识库** | 管理和检索知识 | 知识库管理器、提取器、查询服务、向量存储 |
+| **知识库适配器层** | 支持多后端向量数据库 | 内部存储、Milvus、Pinecone、Weaviate、ChromaDB适配器 |
+| **缓存管理** | 提高查询性能 | LRU缓存、实体缓存、查询结果缓存、缓存失效策略 |
+| **权限管理** | 角色访问控制和实体级权限 | RBAC、实体权限控制、权限验证 |
+| **版本控制** | 实体版本管理 | 版本历史记录、回滚功能、差异比较 |
+| **审计日志** | 操作记录和审计 | 操作日志、日志查询、日志统计 |
 | **反馈系统** | 收集和分析用户反馈 | 反馈管理器、收集器、分析器 |
 | **认证系统** | 管理用户认证和授权 | 认证服务、数据库 |
 | **数据层** | 存储数据 | 关系数据库、向量数据库、文件系统 |

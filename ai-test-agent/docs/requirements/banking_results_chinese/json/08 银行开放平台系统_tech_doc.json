@@ -2,16 +2,19 @@
   "version": "1.0",
   "timestamp": 1777436639.691921,
   "architecture": {
-    "content": "| **文档完整性** | ❌ 不满足最低交付要求 | 缺失全部核心功能描述、非功能指标、约束条件、业务规则；无法启动任何架构设计 |\n"
+    "content": "graph LR\n"
   },
   "tech_stack": {
-    "content": "To be defined"
+    "content": "|------|----------|----------|----------|------------|\n"
   },
   "core_modules": [
-    "To be defined"
+    "| **零信任网络（ZTN）** | 所有组件间通信强制双向mTLS（国密SM2证书），API网关与后端服务间启用SPIFFE身份验证 | 银发〔2019〕316号第5.2条 |",
+    "| **数据主权隔离** | 合作方数据存储于独立租户Schema（PostgreSQL Row-Level Security），物理隔离+逻辑隔离双保障 | JR/T 0220-2021 第7.3.1条 |",
+    "| 模块 | 职责 | 关键能力 | 数据主权归属 |",
+    "|------|------|----------|--------------|"
   ],
   "interface_design": {
-    "content": "- 执行动作：\n"
+    "content": "| **安全凭证中心（Trust Authority）** | 密钥管理、证书签发、双因子认证 | • U盾+短信双因子（符合JR/T 0220-2021 6.4.2）<br>• CFCA EV证书自动续期<br>• 密钥轮换周期≤90天（\n"
   },
   "data_flow": {
     "content": "To be defined"
@@ -23,6 +26,6 @@
     "content": "To be defined"
   },
   "deployment": {
-    "content": "To be defined"
+    "content": "---\n"
   }
 }
