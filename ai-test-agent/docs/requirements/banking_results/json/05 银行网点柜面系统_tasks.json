@@ -1,0 +1,126 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2649577,
+  "tasks": [
+    {
+      "id": "1",
+      "name": "**Task ID**: `DB-01`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task name**: Provision secure PostgreSQL 15 + TimescaleDB instance with encryption-at-rest and RLS skeleton",
+      "description": "Install PostgreSQL 15.5 + TimescaleDB 2.14 on Ubuntu 22.04 LTS; configure native `pgcrypto`, enable transparent data encryption (TDE) via `pg_tde` (or filesystem-level LUKS if `pg_tde` unavailable); define minimal RLS policies for tenant isolation (`branch_id` column required on all PII-audited tables).",
+      "technical_requirements": "",
+      "inputs_outputs": "Running DB instance; verified `SELECT pg_encrypted_tables()` (or LUKS status); `SHOW row_security; → on`",
+      "estimated_time": 2.0,
+      "dependencies": [],
+      "priority": "**p0** (foundational data layer)"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `DB-02`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task name**: Implement TimescaleDB hypertable for GDPR/JR/T-compliant audit logging",
+      "description": "Create `audit_log` hypertable partitioned by `event_time` (1-day chunks); add compression policy (7-day retention); enforce JR/T 0171-2020 §6.4.3 via `data_minimization_trigger()` that strips non-essential fields (e.g., full biometric hash → salted SHA-256 truncated to 32 chars) before insert.",
+      "technical_requirements": "",
+      "inputs_outputs": "Compressed hypertable; `SELECT * FROM audit_log ORDER BY event_time DESC LIMIT 5` shows truncated hashes & anonymized IPs",
+      "estimated_time": 1.0,
+      "dependencies": [],
+      "priority": "**p0**"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `GW-01`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task name**: Configure NGINX-based Edge Gateway to require and validate kiosk client certificates",
+      "description": "Deploy NGINX 1.24+ as reverse proxy; configure mTLS with CA-signed client certs issued per branch; reject requests missing `SSL_CLIENT_VERIFY: SUCCESS` or invalid `SSL_CLIENT_S_DN_CN` (must match registered branch ID regex `^BR-[0-9]{4}$`). Log validation failures to `audit_log`.",
+      "technical_requirements": "",
+      "inputs_outputs": "`curl -k --cert kiosk.crt --key kiosk.key https://gateway/api/health → 200`; invalid CN → `403` + audit entry",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p0**"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `EDGE-01`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task name**: Build Yocto Kirkstone (4",
+      "description": "Create custom Yocto layer (`meta-kiosk`) adding `chromium-ozone-wayland`, disabling screen blanking, enabling kiosk mode (`--kiosk --no-sandbox --disable-features=Translate,PasswordGeneration`), and auto-starting via `systemd` service (`kiosk.service`). Enforce read-only rootfs.",
+      "technical_requirements": "",
+      "inputs_outputs": "Flashable `.wic.gz` image; booted system launches Chromium full-screen to `https://localhost:8443`",
+      "estimated_time": 8,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `EDGE-02`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task name**: Implement local SQLite policy engine enforcing offline PII/biometric residency rules",
+      "description": "Develop Python 3.11 CLI tool (`policy-engine.py`) that:",
+      "technical_requirements": "",
+      "inputs_outputs": "`./policy-engine.py --validate → OK` (if compliant); `ERROR: Biometric data not encrypted` (if violated)",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p1**"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `BACK-01`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task name**: Build Python FastAPI service to auto-generate RLS policies per branch registration",
+      "description": "Create REST endpoint `POST /v1/branches` accepting `{ \"branch_id\": \"BR-5678\", \"tenant_name\": \"Shanghai Branch\" }`. Service:",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    }
+  ]
+}

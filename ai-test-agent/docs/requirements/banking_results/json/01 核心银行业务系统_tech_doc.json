@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2615728,
+  "architecture": {
+    "content": "## **4. Core Module Breakdown**\n"
+  },
+  "tech_stack": {
+    "content": "| **Compute**             | Kubernetes (EKS/ACK), Serverless (FC)           | ✅ **ACK (Alibaba Kubernetes)**: Integrated with Alibaba Cloud KMS (SM4), auto-scaling, CNCF-certified, supports air-gapped clusters for sensitive workloads.      | CBIRC §5.1 (infrastructure resilience), GB/T 35273-2020 (data security grading)         |\n"
+  },
+  "core_modules": [
+    "To be defined"
+  ],
+  "interface_design": {
+    "content": "| **Customer Master**     | • Unified Customer View (natural/juridical)<br>• UBO resolution engine (PEP/Sanctions screening via Refinitiv API)<br>• PIPL-compliant consent lifecycle (opt-in/opt-out/withdrawal)<br>• Document vault (SM4-encrypted PDF/A-3) | PIPL Art. 28–30 (consent), CBIRC §3.5 (UBO disclosure), P\n"
+  },
+  "data_flow": {
+    "content": "To be defined"
+  },
+  "challenges": [
+    "To be defined"
+  ],
+  "implementation": {
+    "content": "To be defined"
+  },
+  "deployment": {
+    "content": "---\n"
+  }
+}

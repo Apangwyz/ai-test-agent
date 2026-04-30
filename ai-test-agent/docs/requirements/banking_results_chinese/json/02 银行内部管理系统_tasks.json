@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "timestamp": 1777433611.4158306,
+  "tasks": [
+    {
+      "id": 1,
+      "name": "项目结构搭建",
+      "description": "创建基础项目结构并安装依赖",
+      "technical_requirements": "Python, Flask, 所需库",
+      "inputs_outputs": "输入: 项目需求, 输出: 项目结构",
+      "estimated_time": 2,
+      "dependencies": [],
+      "priority": "high"
+    },
+    {
+      "id": 2,
+      "name": "核心模块实现",
+      "description": "开发核心功能模块",
+      "technical_requirements": "Python, 相关库",
+      "inputs_outputs": "输入: 模块规格, 输出: 已实现模块",
+      "estimated_time": 8,
+      "dependencies": [
+        1
+      ],
+      "priority": "high"
+    },
+    {
+      "id": 3,
+      "name": "API端点开发",
+      "description": "创建RESTful API端点",
+      "technical_requirements": "Flask-RESTful",
+      "inputs_outputs": "输入: API规格, 输出: API端点",
+      "estimated_time": 6,
+      "dependencies": [
+        2
+      ],
+      "priority": "high"
+    },
+    {
+      "id": 4,
+      "name": "认证系统实现",
+      "description": "添加用户认证和授权功能",
+      "technical_requirements": "Flask-JWT-Extended",
+      "inputs_outputs": "输入: 认证需求, 输出: 认证系统",
+      "estimated_time": 4,
+      "dependencies": [
+        3
+      ],
+      "priority": "medium"
+    },
+    {
+      "id": 5,
+      "name": "测试用例编写",
+      "description": "创建单元测试和集成测试",
+      "technical_requirements": "pytest",
+      "inputs_outputs": "输入: 代码库, 输出: 测试套件",
+      "estimated_time": 6,
+      "dependencies": [
+        4
+      ],
+      "priority": "medium"
+    }
+  ]
+}

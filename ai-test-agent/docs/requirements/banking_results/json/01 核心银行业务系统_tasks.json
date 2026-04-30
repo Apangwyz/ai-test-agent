@@ -1,0 +1,126 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2649577,
+  "tasks": [
+    {
+      "id": "1",
+      "name": "**Task ID**: `CRYPTO-SM4-PDF`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Implement SM4-GCM encryption/decryption for PDF/A-3 documents using Alibaba Cloud KMS",
+      "description": "Build a reusable utility that encrypts/decrypts PDF/A-3 files using SM4-GCM (128-bit key) via Alibaba Cloud KMS API. Must validate PDF/A-3 conformance *before* encryption and preserve embedded metadata (XMP, digital signatures).",
+      "technical_requirements": "",
+      "inputs_outputs": "`{ encryptedBlob: Buffer, kmsEncryptedKey: string, metadata: { keyId, algorithm, pdfA3Valid: true } }`",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p0** (foundational for document vault & pipl/gb/t 35273 compliance)"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `CONSENT-PIPL-LIFECYCLE`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Build consent state machine with opt-in/opt-out/withdrawal tracking and audit logging",
+      "description": "Implement a consent service that enforces PIPL Art. 28–30: granular purpose-based consent, explicit opt-in (no pre-ticked), withdrawal = immediate revocation, immutable audit trail. Supports natural/juridical persons.",
+      "technical_requirements": "",
+      "inputs_outputs": "Consent record with `consentId`, `validUntil`, `auditTrail[]` (timestamp, action, actorIP)",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p0** (regulatory non-negotiable; blocks customer master)"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `CUSTOMER-UNIFIED-VIEW`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Design and implement schema + REST API for unified natural/juridical customer profiles",
+      "description": "Create a canonical customer model supporting both individual (natural) and corporate (juridical) entities in one schema. Includes mandatory fields per CBIRC §3.5 (UBO disclosure) and PIPL (data minimization).",
+      "technical_requirements": "",
+      "inputs_outputs": "Full customer object (with masked PII in responses unless authz scope `pii:read`)",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p0** (core domain model; prerequisite for all downstream modules)"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `UBO-REFINITIV-STUB`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Implement lightweight UBO resolution service calling Refinitiv World-Check API",
+      "description": "Build a synchronous service that submits juridical customer data to Refinitiv World-Check API for PEP/Sanctions screening and returns resolved UBOs. Includes fallback handling and CBIRC §3.5-compliant result mapping.",
+      "technical_requirements": "",
+      "inputs_outputs": "`CUSTOMER-UNIFIED-VIEW` (to supply input data), ACK Redis cluster setup (assumed infra)",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p1** (critical for cbirc §3.5; requires external api credentials)"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `VAULT-DOC-STORAGE`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Build secure document upload/retrieval API for SM4-encrypted PDF/A-3 files",
+      "description": "Implement REST endpoints to store/retrieve customer documents (e.g., ID scans, incorporation docs) with end-to-end SM4 encryption, access control, and PIPL-compliant retention.",
+      "technical_requirements": "",
+      "inputs_outputs": "`{ documentId, encryptedOssUrl, sizeBytes, uploadedAt, expiresAt }`",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "**p1** (directly enables customer master’s document vault requirement)"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `ACK-DEPLOY-CORE`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Author Helm charts and K8s manifests for deploying core services on Alibaba ACK",
+      "description": "Package all above services (`consent`, `customer`, `vault`, `ubo`) as Helm charts",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    }
+  ]
+}

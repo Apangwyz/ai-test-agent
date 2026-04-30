@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试案例脑图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .meta-info {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        #mindmap {
+            width: 100%;
+            height: 800px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>测试案例脑图</h1>
+        <div class="meta-info">
+            <p>版本: 1.0 | 生成时间: 2026-04-29 18:12:26</p>
+        </div>
+        <div id="mindmap"></div>
+    </div>
+    <script>
+        var chartDom = document.getElementById('mindmap');
+        var myChart = echarts.init(chartDom);
+        var option = {"series": [{"type": "tree", "data": [{"name": "测试案例", "children": [{"name": "功能测试", "children": [{"name": "1. **【诊断说明】** —— 明确缺失项及其对测试设计的影响", "children": [{"name": "测试步骤", "children": []}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: Standard test environment"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}, {"name": "2. **【模板化框架】** —— 可立即填充的标准化测试用例模板（含示例）", "children": [{"name": "测试步骤", "children": [{"name": "| 测试步骤 | 1. [前置条件] <br> 2. [操作序列，含输入数据] <br> 3. [触发动作] |"}]}, {"name": "预期结果", "children": [{"name": "| 预期结果 | • [可观察行为，避免主观描述] <br> • [状态/数据/日志/响应码等客观证据] |"}]}, {"name": "优先级: medium"}, {"name": "环境: testuser (5min)` | 高 | • 工具：curl + Python脚本<br>• 环境：启用速率限制中间件（如Redis计数器）<br>• 数据：用户`testuser`初始状态为active |"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}, {"name": "1. **【2小时内】填充需求骨架**", "children": [{"name": "测试步骤", "children": []}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: Standard test environment"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}, {"name": "2. **【1天内】生成可执行测试计划**", "children": [{"name": "测试步骤", "children": []}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: Standard test environment"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}], "symbol": "circle", "symbolSize": 50, "itemStyle": {"color": "#2196F3"}}], "symbol": "circle", "symbolSize": 70, "itemStyle": {"color": "#4CAF50"}}], "top": "5%", "left": "10%", "bottom": "5%", "right": "20%", "symbolSize": 10, "label": {"position": "left", "verticalAlign": "middle", "align": "right", "fontSize": 14}, "leaves": {"label": {"position": "right", "verticalAlign": "middle", "align": "left"}}, "emphasis": {"focus": "descendant"}, "expandAndCollapse": true, "animationDuration": 550, "animationDurationUpdate": 750}]};
+        myChart.setOption(option);
+        window.addEventListener('resize', function() {
+            myChart.resize();
+        });
+    </script>
+</body>
+</html>

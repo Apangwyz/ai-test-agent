@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2447233,
+  "test_cases": [
+    {
+      "id": "1",
+      "name": "**Replace bracketed placeholders** (e",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    },
+    {
+      "id": "2",
+      "name": "**Map test steps** to your real UI/API flows (e",
+      "type": "| **cc-02** | works in legacy browser (ie11 or edge legacy)       | compatibility     | 1. launch ie11 / edge legacy<br>2. access `[critical functionality url]` (e.g., public-facing form)<br>3. submit minimal valid data         | page loads without js errors; form submits successfully; basic styling preserved (no layout breakage)           | low      | windows 10 vm with ie11; polyfills served conditionally; backend accepts legacy content-type (e.g., `text/html`) |",
+      "steps": [
+        "### 🔑 Critical Next Steps for Your Team"
+      ],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "| **FC-03** | Session timeout enforces re-authentication          | Functional        | 1. Log in successfully<br>2. Wait `[Session Timeout Duration]` (e.g., 15 min)<br>3. Perform any protected action (e.g., load profile page) | User redirected to login page; session invalidated; no access to protected resources                             | High     | Configurable session timeout; clock-synchronized test environment                              |"
+    },
+    {
+      "id": "1",
+      "name": "**Define Core Modules First**",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    },
+    {
+      "id": "2",
+      "name": "**Specify Constraints**",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    }
+  ]
+}

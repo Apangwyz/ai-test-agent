@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "timestamp": 1777436639.691921,
+  "architecture": {
+    "content": "subgraph B[接入层]\n"
+  },
+  "tech_stack": {
+    "content": "| **OCR引擎** | PaddleOCR v2.7 vs 商汤SenseID | ✅ **PaddleOCR v2.7** | • 开源可控，满足信创要求（已适配龙芯+UOS）<br\n"
+  },
+  "core_modules": [
+    "To be defined"
+  ],
+  "interface_design": {
+    "content": "> - **零信任终端**：所有终端必须通过设备指纹（TPM 2.0 + MAC地址+序列号哈希）+ 柜员生物特征（指纹模板）双重认证；\n"
+  },
+  "data_flow": {
+    "content": "To be defined"
+  },
+  "challenges": [
+    "To be defined"
+  ],
+  "implementation": {
+    "content": "To be defined"
+  },
+  "deployment": {
+    "content": "---\n"
+  }
+}

@@ -18,7 +18,7 @@ class ClarificationGenerator:
         try:
             # Prepare prompt for AI model
             prompt = self._prepare_prompt(structured_data)
-            system_prompt = "You are an expert business analyst specializing in requirement analysis. Your task is to identify ambiguous points, conflicts, and missing information in software requirements."
+            system_prompt = "你是一位专业的业务分析师，专注于需求分析。你的任务是识别软件需求中的模糊点、冲突和缺失信息。请用中文回答。"
             
             try:
                 # Use AI service for advanced analysis
@@ -51,22 +51,22 @@ class ClarificationGenerator:
         constraints = '\n'.join(structured_data.get('constraints', []))
         
         prompt = f"""
-        Analyze the following software requirements and identify:
-        1. Ambiguous points that need clarification
-        2. Conflicts between requirements
-        3. Missing information that should be specified
-        4. Business rules that need further definition
+        请分析以下软件需求并识别：
+        1. 需要澄清的模糊点
+        2. 需求之间的冲突
+        3. 需要明确的缺失信息
+        4. 需要进一步定义的业务规则
         
-        Requirements sections:
+        需求章节：
         {sections}
         
-        Functional requirements:
+        功能需求：
         {requirements}
         
-        Constraints:
+        约束条件：
         {constraints}
         
-        Please provide a comprehensive analysis with specific questions for each issue identified.
+        请提供全面的分析，针对每个发现的问题提出具体的问题。
         """
         return prompt
     
@@ -76,19 +76,19 @@ class ClarificationGenerator:
         """
         issues = []
         
-        # Check for common issues
+        # 检查常见问题
         if not structured_data.get('requirements'):
-            issues.append("No functional requirements identified")
+            issues.append("未识别到功能需求")
         
         if not structured_data.get('constraints'):
-            issues.append("No constraints or non-functional requirements identified")
+            issues.append("未识别到约束条件或非功能需求")
         
-        # Analyze requirements for ambiguity
+        # 分析需求中的模糊性
         for req in structured_data.get('requirements', []):
-            if 'should' in req.lower() or 'may' in req.lower():
-                issues.append(f"Ambiguous requirement: {req}")
-            if 'etc' in req.lower() or 'etc.' in req.lower():
-                issues.append(f"Incomplete requirement: {req}")
+            if '应' in req or '可' in req:
+                issues.append(f"模糊需求: {req}")
+            if '等等' in req or '等' in req:
+                issues.append(f"不完整需求: {req}")
         
         return '\n'.join(issues)
     
@@ -105,7 +105,7 @@ class ClarificationGenerator:
             'suggestions': []
         }
         
-        # Parse content into structured format
+        # 解析内容为结构化格式
         lines = content.split('\n')
         current_section = None
         
@@ -114,20 +114,20 @@ class ClarificationGenerator:
             if not line:
                 continue
             
-            if 'Ambiguous' in line or 'ambiguous' in line:
+            if '模糊' in line or 'Ambiguous' in line or 'ambiguous' in line:
                 current_section = 'ambiguous_points'
-            elif 'Conflict' in line or 'conflict' in line:
+            elif '冲突' in line or 'Conflict' in line or 'conflict' in line:
                 current_section = 'conflicts'
-            elif 'Missing' in line or 'missing' in line:
+            elif '缺失' in line or 'Missing' in line or 'missing' in line:
                 current_section = 'missing_information'
-            elif 'Suggestion' in line or 'suggestion' in line:
+            elif '建议' in line or 'Suggestion' in line or 'suggestion' in line:
                 current_section = 'suggestions'
             elif current_section:
                 clarification_doc[current_section].append(line)
         
-        # Add default issues if none found
+        # 如果没有找到问题，添加默认提示
         if not any([clarification_doc['ambiguous_points'], clarification_doc['conflicts'], clarification_doc['missing_information']]):
-            clarification_doc['suggestions'].append("No major issues identified. Please review requirements for completeness.")
+            clarification_doc['suggestions'].append("未识别到重大问题。请检查需求的完整性。")
         
         return clarification_doc
     
@@ -141,5 +141,5 @@ class ClarificationGenerator:
             'ambiguous_points': [],
             'conflicts': [],
             'missing_information': [],
-            'suggestions': ["Error generating clarification. Please check your OpenAI API key and try again."]
+            'suggestions': ["生成需求澄清文档时出错。请检查您的API密钥并重试。"]
         }

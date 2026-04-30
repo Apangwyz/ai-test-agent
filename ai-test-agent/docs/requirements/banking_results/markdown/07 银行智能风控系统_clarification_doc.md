@@ -1,0 +1,42 @@
+# 文档
+
+{
+  "version": "1.0",
+  "timestamp": 1777422958.262142,
+  "ambiguous_points": [
+    "*Ambiguity arises when language permits multiple interpretations, lacks quantifiable thresholds, or omits scope boundaries.*",
+    "|--------|---------------------|-------------------------------|",
+    "| **“银行智能风控系统” (Bank Intelligent Risk Control System)** | The term *“intelligent”* is marketing jargon with no technical or behavioral definition. Does it imply ML models? Real-time decisioning? Explainable AI? Adaptive learning? Without operationalization, it cannot be designed, tested, or accepted. | • What specific intelligent capabilities must the system exhibit (e.g., anomaly detection using unsupervised learning, dynamic rule optimization, NLP-based alert triage)?<br>• Which intelligence features are *mandatory* vs. *future-phase*?<br>• How will “intelligence” be objectively measured (e.g., model AUC ≥ 0.92, false positive reduction ≥ 35% vs. legacy rules)? |",
+    "| **“预期交付物清单” (Expected Deliverables List)** | No deliverables are listed — ambiguity about scope boundaries, contractual obligations, and success criteria. | • Which artifacts must be delivered (e.g., trained model weights + SHAP explanations, API spec + Swagger, production deployment runbooks, model monitoring dashboard)?<br>• Are source code, training data lineage metadata, and bias audit reports included? |",
+    "---"
+  ],
+  "conflicts": [
+    "|--------|-------------------|-------------------------------|",
+    "---"
+  ],
+  "missing_information": [
+    "*Per ISO/IEC/IEEE 29148, a valid requirements specification must include at least: purpose, scope, definitions, stakeholders, functional behavior, external interfaces, quality attributes, constraints, and assumptions.*",
+    "|----------|------------------|--------------------------------------------|",
+    "| **Functional Requirements** | None provided. No use cases, user stories, or behavioral specifications (e.g., “When a transaction >¥50,000 is initiated, the system shall trigger real-time ML scoring and block if risk score ≥ 95”). | • What are the 5 highest-priority risk scenarios (e.g., account takeover, synthetic identity fraud, merchant collusion, money mule detection, AML suspicious activity reporting)?<br>• For each scenario: What triggers the action? What data inputs are required? What decision logic applies? What outputs/alerts/actions result? |",
+    "| **Non-Functional Requirements (NFRs)** | No performance, security, reliability, or compliance metrics defined (e.g., throughput, accuracy, uptime, encryption standards, audit logging depth). | • What are the minimum acceptable values for:<br>– Transaction scoring latency (P99, P99.9)?<br>– Model inference accuracy (precision/recall trade-off per risk type)?<br>– System availability (e.g., 99.99% during business hours)?<br>– Audit trail retention period (e.g., 7 years per CBRC regulations)? |",
+    "| **Regulatory & Compliance Constraints** | No mention of jurisdictional requirements (e.g., China’s *Personal Information Protection Law (PIPL)*, *CBRC Guidelines on AI Risk Management*, *GDPR* for cross-border data). | • Which regulatory frameworks apply (by geography, data residency, customer type)?<br>• Must models be explainable per Article 22 of PIPL? What constitutes “sufficient explanation” for auditors? |",
+    "| **Integration Points** | No APIs, protocols, or handoff mechanisms defined (e.g., “Must integrate with ABC Core Banking via ISO 8583 over TLS 1.3”). | • Which upstream systems provide transaction events? Which downstream systems consume alerts (e.g., case management, core banking block APIs)?<br>• What are the message schemas, error handling protocols, and idempotency requirements? |",
+    "---",
+    "### 📜 4. Business Rules That Need Further Definition",
+    "*Business rules govern decisions, calculations, and behaviors — they must be explicit, testable, and authoritative.*",
+    "|----------------|---------------------|----------------------------------|",
+    "| **Risk Scoring Logic** | No scoring methodology, weightings, thresholds, or escalation paths defined. | • How is the final risk score calculated (e.g., weighted ensemble of ML score + rules engine score + velocity heuristics)?<br>• What are the exact thresholds for: “Review”, “Block”, “Challenge”, “Approve”? Are they static or adaptive?<br>• Who owns approval of threshold changes (e.g., Risk Committee vs. Ops team)? |",
+    "| **Model Governance Rules** | No MLOps policies: retraining cadence, drift detection thresholds, fallback mechanisms, or human-in-the-loop protocols. | • What triggers automatic model retraining (e.g., concept drift >5% on validation set)?<br>• What is the fallback behavior if the primary model fails (e.g., switch to shadow rules engine within 200ms)?<br>• Must all high-risk decisions (>score 90) be reviewed by a human within 15 minutes? |",
+    "| **Customer Impact Rules** | No policy on false positives: compensation, notification, appeal process, or service-level commitments. | • What is the maximum allowable false positive rate for salary transfer transactions?<br>• If a legitimate transaction is blocked, what is the guaranteed resolution SLA (e.g., 2-hour reversal + SMS apology)?<br>• Is there a customer-facing dispute portal? What data must be disclosed to the customer? |",
+    "| **Explainability & Fairness Rules** | No definition of fairness metrics (e.g., demographic parity across age/gender/region) or explanation depth (e.g., top-3 contributing features + natural language summary). | • Which protected attributes (per PIPL/CBRC) must be excluded from modeling? Which may be used *only* for bias testing?<br>• What explanation format satisfies regulatory audit requirements (e.g., LIME + counterfactuals + plain-language summary)? |",
+    "---",
+    "### ✅ Recommended Next Steps",
+    "1. **Freeze the Requirements Baseline**: Halt development until Sections “Functional requirements:”, “Constraints:”, and all subsections under “核心功能需求” through “验收标准” are populated with *testable, atomic, uniquely identified* requirements (e.g., `FR-001`, `NFR-027`, `BR-015`).",
+    "2. **Conduct a Requirements Workshop**: Facilitate joint sessions with:",
+    "– Risk Officers (to define BRs & thresholds)",
+    "– Compliance/Legal (to specify PIPL/CBRC/GDPR obligations)",
+    "– Data Engineering (to map data sources & SLAs)",
+    "– Operations (to define monitoring"
+  ],
+  "suggestions": []
+}

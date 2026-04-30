@@ -1,0 +1,68 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2447233,
+  "test_cases": [
+    {
+      "id": "1",
+      "name": "Submit POST `/api/v1/customers` with natural person payload: `{ \"name\": \"Zhang San\", \"idCardNo\": \"11010119900307271X\", \"mobile\": \"+8613800138000\", \"consent\": {\"optIn\": true, \"purpose\": [\"KYC\", \"marketing\"], \"validUntil\": \"2027-06-15\"} }`",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    },
+    {
+      "id": "2",
+      "name": "Verify system generates unique `customerID` and `consentID`",
+      "type": "functional",
+      "steps": [
+        ""
+      ],
+      "expected_results": [
+        ""
+      ],
+      "priority": "high",
+      "environment": "- Staging environment with live SM4 HSM (e.g., Huawei Cloud KMS or Zhongchuang SM4 module);"
+    },
+    {
+      "id": "1",
+      "name": "Submit POST `/api/v1/customers` with juridical payload: `{ \"legalName\": \"Shanghai Tech Co",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    },
+    {
+      "id": "2",
+      "name": "Trigger UBO resolution engine manually via `/api/v1/customers/{id}/resolve-ubo`",
+      "type": "functional",
+      "steps": [
+        ""
+      ],
+      "expected_results": [
+        ""
+      ],
+      "priority": "critical",
+      "environment": ""
+    },
+    {
+      "id": "1",
+      "name": "Create customer with consent (as in TC-CM-FUNC-001)",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    },
+    {
+      "id": "2",
+      "name": "PATCH `/api",
+      "type": "functional",
+      "steps": [],
+      "expected_results": [],
+      "priority": "medium",
+      "environment": "Standard test environment"
+    }
+  ]
+}

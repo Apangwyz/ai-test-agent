@@ -1,0 +1,38 @@
+# 文档
+
+{
+  "version": "1.0",
+  "timestamp": 1777422958.262142,
+  "ambiguous_points": [
+    "|-------------------|---------------------|----------------------------|",
+    "| **“核心银行业务系统” (Core Banking System)** | No definition of *what constitutes “core”* in this context — e.g., does it include lending, deposits, payments, GL, treasury, or only transactional account servicing? Scope varies widely across institutions (e.g., Temenos CoreBanking vs. custom-built modular systems). | • What specific banking domains *must* be covered (e.g., current/savings accounts, term deposits, real-time payments, FX, loan origination)?<br>• Does “core” imply real-time GL posting, or is batch processing acceptable?<br>• Is branch banking, ATM integration, or mobile banking UI part of this system—or out of scope? |",
+    "| **“核心功能需求” (Core Functional Requirements)** | This section header exists but contains *zero functional statements*. No verbs, no actors, no conditions, no acceptance criteria. | • Which user roles (e.g., Teller, Loan Officer, Back-Office Analyst, Compliance Officer) perform which actions?<br>• What are the *minimum viable capabilities* per module (e.g., “Account Opening” must support KYC document upload, OFAC screening, and auto-approval thresholds — but none are specified)? |",
+    "| **“Functional requirements:” (blank line)** | A label without content violates traceability and testability principles. Ambiguity isn’t just *what* — it’s *that nothing is defined at all*. | • Are functional requirements captured elsewhere (e.g., in user stories, use cases, or a separate BRD)? If so, where? How are they linked?<br>• Is this an intentional placeholder for future input — and if so, what is the governance process and deadline for populating it? |",
+    "| **“Constraints:” (blank line)** | Constraints define critical boundaries (regulatory, technical, operational). Blank = unknown risk exposure. | • Are there jurisdiction-specific constraints (e.g., data residency in mainland China per PIPL; encryption standards like SM4; audit log retention ≥5 years per CBIRC)?<br>• Are there legacy integration constraints (e.g., must interface with existing core via IBM CICS/COBOL APIs)? |",
+    "---"
+  ],
+  "conflicts": [
+    "|---------------------------|--------------------|------------------------|",
+    "| **“验收标准” (Acceptance Criteria)** vs. **empty “Functional requirements”** | Acceptance criteria cannot exist without traceable functional requirements. Claiming “system will be accepted when X, Y, Z are met” is meaningless if X/Y/Z are undefined. | • How will acceptance testing be conducted without testable requirements?<br>• Who defines and approves acceptance criteria — business stakeholders, QA, regulators, or internal audit? What happens if criteria evolve mid-project? |",
+    "---"
+  ],
+  "missing_information": [
+    "*Per ISO/IEC/IEEE 29148, a complete requirements spec must include context, scope, stakeholders, behavior, quality, constraints, and assumptions.*",
+    "|----------|----------------|---------------------|------------------------|",
+    "| **Regulatory & Compliance Requirements** | Zero mention of mandatory banking regulations (e.g., AML/CFT rules, Basel III capital reporting, CBIRC Circular 2022–17 on IT risk management, GDPR/PIPL data handling). | Core banking systems are *heavily regulated*. Omission creates legal, financial, and reputational risk. | • Which regulatory frameworks apply (jurisdictional scope: PRC-only? Cross-border operations?)?<br>• Must the system generate BCBS 239-compliant risk data aggregates? Support SAR/STR filing workflows? |",
+    "| **Data Model & Integrity Rules** | No entity definitions (e.g., “Customer”, “Account”, “Transaction”), relationships, cardinalities, or integrity constraints (e.g., “An account must have exactly one primary owner”). | Without data semantics, development leads to inconsistent implementations and reconciliation failures. | • What is the canonical customer master definition (natural/juridical person, UBO disclosure, tax ID formats)?<br>• Are account numbers globally unique? How are duplicates prevented during bulk onboarding? |",
+    "| **Security & Audit Requirements** | No mention of authentication (e.g., multi-factor for tellers), authorization (RBAC/ABAC), encryption (at-rest/in-transit), or audit logging (who did what, when, and why). | Banking systems require PCI DSS, ISO 27001, and CBIRC cybersecurity compliance. | • What are password policies, session timeouts, and privileged access controls?<br>• Must all balance-changing transactions be dual-controlled (e.g., “maker-checker” workflow)? |",
+    "| **Business Continuity & DR** | No RTO/RPO targets, failover topology, or backup frequency. | Core banking downtime directly impacts liquidity, reputation, and regulatory penalties. | • What is the maximum allowable downtime (RTO) for GL posting? For ATM withdrawal processing?<br>• Must DR site be active-active, or is warm-standby sufficient? |",
+    "---",
+    "### 📜 4. Business Rules That Need Further Definition",
+    "*Business rules govern decision logic, validations, and workflows — yet none are articulated.*",
+    "| Business Rule Domain | Example Rule (Illustrative — *not present in doc*) | Questions to Elicit Actual Rules |",
+    "|----------------------|------------------------------------------------------|----------------------------------|",
+    "| **Account Opening** | “A corporate account requires certified articles of incorporation, UBO declaration, and bank reference letter.” | • What documents are *mandatory* vs. *conditional* (e.g., based on entity type, country of registration, or expected turnover)?<br>• What automated validations apply (e.g., UBO name vs. sanctions list; document expiry date check)? |",
+    "| **Transaction Limits** | “Daily cash withdrawal limit is ¥50,000 per account unless pre-approved.” | • How is “pre-approval” granted (manual workflow? automated risk scoring)?<br>• Are limits cumulative across channels (ATM + counter + mobile)? Do weekends/holidays reset limits? |",
+    "| **Interest Calculation** | “Savings accounts accrue daily interest, compounded monthly, using 360-day year basis.” | • What happens on partial withdrawals? Is interest prorated? Is tiered interest applied (e.g., >¥100k earns +0.2%)?<br>• How are leap-year days handled in accruals? |",
+    "| **Dormant Account Handling** | “Accounts inactive >12 months are flagged; >24 months are restricted from debit.” | • What constitutes “activity” (e.g., login only? balance inquiry? statement download)?<br>• What notifications are sent to customers before restriction? What reactivation process applies? |",
+    "| **Error & Exception Handling** | “Duplicate transaction IDs must trigger immediate halt and manual review.” | • What is the source of truth for transaction ID uniqueness (application layer? database sequence? external payment network)?<br>• Who receives the alert —"
+  ],
+  "suggestions": []
+}

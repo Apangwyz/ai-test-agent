@@ -19,7 +19,7 @@ class TestCaseGenerator:
         try:
             # Prepare prompt for AI model
             prompt = self._prepare_prompt(structured_data, tech_doc)
-            system_prompt = "You are an expert QA engineer specializing in software testing. Your task is to create comprehensive test cases based on requirements and technical documentation."
+            system_prompt = "你是一位专业的QA工程师，专注于软件测试。你的任务是根据需求和技术文档创建全面的测试案例。请用中文回答。"
             
             try:
                 # Use AI service for advanced test case generation
@@ -54,36 +54,36 @@ class TestCaseGenerator:
         interface_design = tech_doc.get('interface_design', {}).get('content', '')
         
         prompt = f"""
-        Create comprehensive test cases for the following software system:
+        为以下软件系统创建全面的测试案例：
         
-        Functional Requirements:
+        功能需求：
         {requirements}
         
-        Constraints:
+        约束条件：
         {constraints}
         
-        Core Modules:
+        核心模块：
         {core_modules}
         
-        Interface Design:
+        接口设计：
         {interface_design}
         
-        Generate test cases covering:
-        1. Functional testing
-        2. Performance testing
-        3. Compatibility testing
-        4. Security testing
+        生成涵盖以下类型的测试案例：
+        1. 功能测试
+        2. 性能测试
+        3. 兼容性测试
+        4. 安全测试
         
-        For each test case, provide:
-        1. Test case ID
-        2. Test case name
-        3. Test type (functional/performance/compatibility/security)
-        4. Test steps
-        5. Expected results
-        6. Priority (high/medium/low)
-        7. Test environment requirements
+        每个测试案例请提供：
+        1. 测试案例ID
+        2. 测试案例名称
+        3. 测试类型（功能/性能/兼容性/安全）
+        4. 测试步骤
+        5. 预期结果
+        6. 优先级（高/中/低）
+        7. 测试环境要求
         
-        Ensure test cases are comprehensive and cover all critical functionality.
+        确保测试案例全面，覆盖所有关键功能。
         """
         return prompt
     
@@ -139,24 +139,26 @@ class TestCaseGenerator:
                     'environment': 'Standard test environment'
                 }
             elif current_test:
-                # Parse test case details
-                if 'type' in line.lower():
-                    current_test['type'] = line.split(':', 1)[1].strip().lower() if ':' in line else line.lower()
-                elif 'step' in line.lower() and 's' in line.lower():
+                # Parse test case details - support both English and Chinese keywords
+                if 'type' in line.lower() or '类型' in line:
+                    type_value = line.split(':', 1)[1].strip() if ':' in line else line
+                    current_test['type'] = self._normalize_test_type(type_value)
+                elif ('step' in line.lower() and 's' in line.lower()) or '步骤' in line:
                     # Extract test steps
                     if 'steps' not in current_test:
                         current_test['steps'] = []
                     step_text = line.split(':', 1)[1].strip() if ':' in line else line
                     current_test['steps'].append(step_text)
-                elif 'expected' in line.lower() and 'result' in line.lower():
+                elif ('expected' in line.lower() and 'result' in line.lower()) or '预期结果' in line:
                     # Extract expected results
                     if 'expected_results' not in current_test:
                         current_test['expected_results'] = []
                     result_text = line.split(':', 1)[1].strip() if ':' in line else line
                     current_test['expected_results'].append(result_text)
-                elif 'priority' in line.lower():
-                    current_test['priority'] = line.split(':', 1)[1].strip().lower() if ':' in line else line.lower()
-                elif 'environment' in line.lower():
+                elif 'priority' in line.lower() or '优先级' in line:
+                    priority_value = line.split(':', 1)[1].strip() if ':' in line else line
+                    current_test['priority'] = self._normalize_priority(priority_value)
+                elif 'environment' in line.lower() or '环境' in line:
                     current_test['environment'] = line.split(':', 1)[1].strip() if ':' in line else line
         
         # Add the last test case
@@ -169,6 +171,48 @@ class TestCaseGenerator:
         
         return test_cases
     
+    def _normalize_test_type(self, type_value):
+        """
+        Normalize test type to standard format
+        Supports both English and Chinese test types
+        """
+        type_map = {
+            'functional': 'functional',
+            'performance': 'performance',
+            'compatibility': 'compatibility',
+            'security': 'security',
+            '功能': 'functional',
+            '性能': 'performance',
+            '兼容': 'compatibility',
+            '安全': 'security',
+            '功能测试': 'functional',
+            '性能测试': 'performance',
+            '兼容性测试': 'compatibility',
+            '安全测试': 'security'
+        }
+        return type_map.get(type_value.lower(), 'functional')
+    
+    def _normalize_priority(self, priority_value):
+        """
+        Normalize priority value to standard format (high/medium/low)
+        Supports both English and Chinese priority values
+        """
+        priority_map = {
+            'high': 'high',
+            'medium': 'medium',
+            'low': 'low',
+            '高': 'high',
+            '中': 'medium',
+            '低': 'low',
+            '高级': 'high',
+            '中级': 'medium',
+            '低级': 'low',
+            '高优先级': 'high',
+            '中优先级': 'medium',
+            '低优先级': 'low'
+        }
+        return priority_map.get(priority_value.lower(), 'medium')
+    
     def _get_default_test_cases_list(self):
         """
         Get default test cases list
@@ -176,83 +220,83 @@ class TestCaseGenerator:
         return [
             {
                 'id': 1,
-                'name': 'User Authentication Test',
+                'name': '用户认证测试',
                 'type': 'functional',
                 'steps': [
-                    'Navigate to login page',
-                    'Enter valid credentials',
-                    'Click login button'
+                    '导航到登录页面',
+                    '输入有效凭证',
+                    '点击登录按钮'
                 ],
                 'expected_results': [
-                    'User should be successfully logged in',
-                    'User should be redirected to dashboard'
+                    '用户应成功登录',
+                    '用户应被重定向到仪表盘'
                 ],
                 'priority': 'high',
-                'environment': 'Any browser'
+                'environment': '任何浏览器'
             },
             {
                 'id': 2,
-                'name': 'Data Validation Test',
+                'name': '数据验证测试',
                 'type': 'functional',
                 'steps': [
-                    'Navigate to form page',
-                    'Enter invalid data',
-                    'Submit form'
+                    '导航到表单页面',
+                    '输入无效数据',
+                    '提交表单'
                 ],
                 'expected_results': [
-                    'Form should display validation errors',
-                    'Form should not submit'
+                    '表单应显示验证错误',
+                    '表单不应提交'
                 ],
                 'priority': 'medium',
-                'environment': 'Any browser'
+                'environment': '任何浏览器'
             },
             {
                 'id': 3,
-                'name': 'Performance Load Test',
+                'name': '性能负载测试',
                 'type': 'performance',
                 'steps': [
-                    'Simulate 100 concurrent users',
-                    'Measure response time',
-                    'Monitor system resources'
+                    '模拟100个并发用户',
+                    '测量响应时间',
+                    '监控系统资源'
                 ],
                 'expected_results': [
-                    'Response time should be < 2 seconds',
-                    'System should remain stable'
+                    '响应时间应小于2秒',
+                    '系统应保持稳定'
                 ],
                 'priority': 'medium',
-                'environment': 'Performance testing environment'
+                'environment': '性能测试环境'
             },
             {
                 'id': 4,
-                'name': 'Cross-Browser Compatibility Test',
+                'name': '跨浏览器兼容性测试',
                 'type': 'compatibility',
                 'steps': [
-                    'Test in Chrome',
-                    'Test in Firefox',
-                    'Test in Safari'
+                    '在Chrome中测试',
+                    '在Firefox中测试',
+                    '在Safari中测试'
                 ],
                 'expected_results': [
-                    'Application should work correctly in all browsers',
-                    'No visual issues should be present'
+                    '应用应在所有浏览器中正常工作',
+                    '不应存在视觉问题'
                 ],
                 'priority': 'medium',
-                'environment': 'Multiple browsers'
+                'environment': '多种浏览器'
             },
             {
                 'id': 5,
-                'name': 'Security Access Control Test',
+                'name': '安全访问控制测试',
                 'type': 'security',
                 'steps': [
-                    'Attempt to access restricted resource',
-                    'Verify access is denied',
-                    'Test with valid credentials'
+                    '尝试访问受限资源',
+                    '验证访问被拒绝',
+                    '使用有效凭证测试'
                 ],
                 'expected_results': [
-                    'Unauthorized access should be blocked',
-                    'Authorized users should have access'
+                    '未授权访问应被阻止',
+                    '授权用户应具有访问权限'
                 ],
                 'priority': 'high',
-                'environment': 'Any browser'
+                'environment': '任何浏览器'
             }
         ]
     

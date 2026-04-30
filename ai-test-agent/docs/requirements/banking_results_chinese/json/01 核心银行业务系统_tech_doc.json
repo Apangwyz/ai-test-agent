@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "timestamp": 1777436639.691921,
+  "architecture": {
+    "content": "| **会计原子性（Accounting Atomicity）** | 每笔交易必须满足“单笔事务=1个借方分录+1个贷方分录+1个审计日志”，禁止跨账户批量记账 | 《企业会计准则第22号——金融工具确认和计量》 |\n"
+  },
+  "tech_stack": {
+    "content": "| **风控引擎** | Drools / Flink CEP / 自研规则引擎 | ✅ **Drools 7.68 + 实时图计算（Neo4j）** | • Drools支持BSL（业务规则语言）可视化配置<br>• Neo4j实现关联方网络实时穿透（满足《金融机构客户尽职调查管理办法》第12条） | ❗所有规则变更需经**风控部门电子签章+区块链存证**（Hyperledger Fabric通道） |\n"
+  },
+  "core_modules": [
+    "To be defined"
+  ],
+  "interface_design": {
+    "content": "---\n"
+  },
+  "data_flow": {
+    "content": "To be defined"
+  },
+  "challenges": [
+    "To be defined"
+  ],
+  "implementation": {
+    "content": "To be defined"
+  },
+  "deployment": {
+    "content": "| **文件存储** | MinIO / 阿里云OSS / 华为OBS | ✅ **MinIO（私有化部署）** | • S3兼容，支持WORM（一次写入多次读取）防篡改<br\n"
+  }
+}

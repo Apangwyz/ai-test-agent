@@ -18,7 +18,7 @@ class TechDocGenerator:
         try:
             # Prepare prompt for AI model
             prompt = self._prepare_prompt(structured_data, clarification_doc)
-            system_prompt = "You are an expert solution architect specializing in software design. Your task is to create comprehensive technical documentation based on software requirements."
+            system_prompt = "你是一位专业的解决方案架构师，专注于软件设计。你的任务是根据软件需求创建全面的技术文档。请用中文回答。"
             
             try:
                 # Use AI service for advanced analysis
@@ -54,33 +54,33 @@ class TechDocGenerator:
         if clarification_doc:
             clarification_items = [item for section in clarification_doc.values() if isinstance(section, list) for item in section]
             joined_items = '\n'.join(clarification_items)
-            clarification_notes = f"Clarification notes:\n{joined_items}"
+            clarification_notes = f"澄清说明:\n{joined_items}"
         
         prompt = f"""
-        Create a comprehensive technical documentation for a software system based on the following requirements:
+        根据以下需求为软件系统创建全面的技术文档：
         
-        Requirements sections:
+        需求章节：
         {sections}
         
-        Functional requirements:
+        功能需求：
         {requirements}
         
-        Constraints:
+        约束条件：
         {constraints}
         
         {clarification_notes}
         
-        The technical documentation should include:
-        1. System architecture design with diagrams
-        2. Technology stack selection with comparison analysis
-        3. Core module breakdown
-        4. Interface design specifications
-        5. Data flow design
-        6. Key technical challenges and solutions
-        7. Implementation approach
-        8. Deployment strategy
+        技术文档应包含：
+        1. 系统架构设计（含图表）
+        2. 技术栈选型（含对比分析）
+        3. 核心模块划分
+        4. 接口设计规范
+        5. 数据流设计
+        6. 关键技术挑战与解决方案
+        7. 实施方法
+        8. 部署策略
         
-        Please provide detailed, professional, and actionable technical documentation that follows industry best practices.
+        请提供详细、专业且可操作的技术文档，遵循行业最佳实践。
         """
         return prompt
     
@@ -129,14 +129,14 @@ class TechDocGenerator:
         current_section = None
         
         section_mapping = {
-            'architecture': ['architecture', 'system design'],
-            'tech_stack': ['technology', 'tech stack', 'tech选型'],
-            'core_modules': ['core modules', 'modules', 'components'],
-            'interface_design': ['interface', 'api', '接口'],
-            'data_flow': ['data flow', '数据流'],
-            'challenges': ['challenges', '技术难点'],
-            'implementation': ['implementation', '开发计划'],
-            'deployment': ['deployment', '部署']
+            'architecture': ['architecture', 'system design', '系统架构', '架构设计', '系统设计'],
+            'tech_stack': ['technology', 'tech stack', 'tech选型', '技术栈', '技术选型'],
+            'core_modules': ['core modules', 'modules', 'components', '核心模块', '组件'],
+            'interface_design': ['interface', 'api', '接口', '接口设计'],
+            'data_flow': ['data flow', '数据流', '数据流程'],
+            'challenges': ['challenges', '技术难点', '技术挑战', '关键挑战'],
+            'implementation': ['implementation', '开发计划', '实施计划', '实施方法'],
+            'deployment': ['deployment', '部署', '部署策略']
         }
         
         for line in lines:

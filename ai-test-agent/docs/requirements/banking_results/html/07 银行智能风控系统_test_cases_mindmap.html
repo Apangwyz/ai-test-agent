@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试案例脑图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body {
+            font-family: Microsoft YaHei, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .meta-info {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        #mindmap {
+            width: 100%;
+            height: 800px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>测试案例脑图</h1>
+        <div class="meta-info">
+            <p>版本: 1.0 | 生成时间: 2026-04-29 08:35:58</p>
+        </div>
+        <div id="mindmap"></div>
+    </div>
+    <script>
+        var chartDom = document.getElementById('mindmap');
+        var myChart = echarts.init(chartDom);
+        var option = {"series": [{"type": "tree", "data": [{"name": "测试案例", "children": [{"name": "功能测试", "children": [{"name": "1. **Replace bracketed placeholders** (e", "children": [{"name": "测试步骤", "children": []}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: Standard test environment"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}, {"name": "1. **Define Core Modules First**", "children": [{"name": "测试步骤", "children": []}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: Standard test environment"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}, {"name": "2. **Specify Constraints**", "children": [{"name": "测试步骤", "children": []}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: Standard test environment"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}], "symbol": "circle", "symbolSize": 50, "itemStyle": {"color": "#2196F3"}}, {"name": "| **cc-02** | works in legacy browser (ie11 or edge legacy)       | compatibility     | 1. launch ie11 / edge legacy<br>2. access `[critical functionality url]` (e.g., public-facing form)<br>3. submit minimal valid data         | page loads without js errors; form submits successfully; basic styling preserved (no layout breakage)           | low      | windows 10 vm with ie11; polyfills served conditionally; backend accepts legacy content-type (e.g., `text/html`) |", "children": [{"name": "2. **Map test steps** to your real UI/API flows (e", "children": [{"name": "测试步骤", "children": [{"name": "### 🔑 Critical Next Steps for Your Team"}]}, {"name": "预期结果", "children": []}, {"name": "优先级: medium"}, {"name": "环境: | **FC-03** | Session timeout enforces re-authentication          | Functional        | 1. Log in successfully<br>2. Wait `[Session Timeout Duration]` (e.g., 15 min)<br>3. Perform any protected action (e.g., load profile page) | User redirected to login page; session invalidated; no access to protected resources                             | High     | Configurable session timeout; clock-synchronized test environment                              |"}], "symbol": "circle", "symbolSize": 40, "itemStyle": {"color": "#00BCD4"}}], "symbol": "circle", "symbolSize": 50, "itemStyle": {"color": "#607D8B"}}], "symbol": "circle", "symbolSize": 70, "itemStyle": {"color": "#4CAF50"}}], "top": "5%", "left": "10%", "bottom": "5%", "right": "20%", "symbolSize": 10, "label": {"position": "left", "verticalAlign": "middle", "align": "right", "fontSize": 14}, "leaves": {"label": {"position": "right", "verticalAlign": "middle", "align": "left"}}, "emphasis": {"focus": "descendant"}, "expandAndCollapse": true, "animationDuration": 550, "animationDurationUpdate": 750}]};
+        myChart.setOption(option);
+        window.addEventListener('resize', function() {
+            myChart.resize();
+        });
+    </script>
+</body>
+</html>

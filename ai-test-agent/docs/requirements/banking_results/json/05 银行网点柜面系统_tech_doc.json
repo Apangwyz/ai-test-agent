@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2615728,
+  "architecture": {
+    "content": "A[Front-End Kiosk Terminal] -->|HTTPS + Mutual TLS| B[Edge Gateway Cluster]\n"
+  },
+  "tech_stack": {
+    "content": "| **Database** | **PostgreSQL 15 + TimescaleDB** | Row-level security, native encryption at rest (pgcrypto), time-series audit log optimization | MySQL: Lacks built-in row-level security for multi-tenant branch isolation | JR/T 0171-2020 §6.4.3 (data minimization enforcement) |\n"
+  },
+  "core_modules": [
+    "| Tier | Components | Location | Residency Requirement | Uptime SLA |",
+    "|--------|------------|----------|-------------------------|-------------|",
+    "| **Kiosk Edge** | Embedded Linux (Yocto), Chromium Kiosk Mode, Local Policy Engine, SQLite Offline DB | Branch Workstation (x86_64) | On-premises only; no cloud sync of PII/biometrics | N/A (local) |"
+  ],
+  "interface_design": {
+    "content": "---\n"
+  },
+  "data_flow": {
+    "content": "To be defined"
+  },
+  "challenges": [
+    "To be defined"
+  ],
+  "implementation": {
+    "content": "**Date**: 2024-10-25\n"
+  },
+  "deployment": {
+    "content": "| **Compliance Sentinel** | • Real-time OFAC/UN/MOFC\n"
+  }
+}

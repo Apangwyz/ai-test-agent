@@ -1,0 +1,86 @@
+{
+  "version": "1.0",
+  "timestamp": 1777457546.425145,
+  "test_cases": [
+    {
+      "id": 1,
+      "name": "用户认证测试",
+      "type": "functional",
+      "steps": [
+        "导航到登录页面",
+        "输入有效凭证",
+        "点击登录按钮"
+      ],
+      "expected_results": [
+        "用户应成功登录",
+        "用户应被重定向到仪表盘"
+      ],
+      "priority": "high",
+      "environment": "任何浏览器"
+    },
+    {
+      "id": 2,
+      "name": "数据验证测试",
+      "type": "functional",
+      "steps": [
+        "导航到表单页面",
+        "输入无效数据",
+        "提交表单"
+      ],
+      "expected_results": [
+        "表单应显示验证错误",
+        "表单不应提交"
+      ],
+      "priority": "medium",
+      "environment": "任何浏览器"
+    },
+    {
+      "id": 3,
+      "name": "性能负载测试",
+      "type": "performance",
+      "steps": [
+        "模拟100个并发用户",
+        "测量响应时间",
+        "监控系统资源"
+      ],
+      "expected_results": [
+        "响应时间应小于2秒",
+        "系统应保持稳定"
+      ],
+      "priority": "medium",
+      "environment": "性能测试环境"
+    },
+    {
+      "id": 4,
+      "name": "跨浏览器兼容性测试",
+      "type": "compatibility",
+      "steps": [
+        "在Chrome中测试",
+        "在Firefox中测试",
+        "在Safari中测试"
+      ],
+      "expected_results": [
+        "应用应在所有浏览器中正常工作",
+        "不应存在视觉问题"
+      ],
+      "priority": "medium",
+      "environment": "多种浏览器"
+    },
+    {
+      "id": 5,
+      "name": "安全访问控制测试",
+      "type": "security",
+      "steps": [
+        "尝试访问受限资源",
+        "验证访问被拒绝",
+        "使用有效凭证测试"
+      ],
+      "expected_results": [
+        "未授权访问应被阻止",
+        "授权用户应具有访问权限"
+      ],
+      "priority": "high",
+      "environment": "任何浏览器"
+    }
+  ]
+}

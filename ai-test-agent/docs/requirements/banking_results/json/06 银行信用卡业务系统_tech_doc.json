@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2615728,
+  "architecture": {
+    "content": "subgraph External Ecosystem\n"
+  },
+  "tech_stack": {
+    "content": "|-------|------------------------|---------------------|---------------|--------------------------------------|\n"
+  },
+  "core_modules": [
+    "| **Backend Language** | Java 17, Go 1.22, Rust 1.75 | • Memory safety for audit logs<br>• CBIRC-mandated JVM tooling (JFR, Flight Recorder)<br>• Spring Boot ecosystem maturity for financial regulations | **Java 17 + Spring Boot 3.2** | ✅ JFR provides cryptographically signed audit trail metadata (CBIRC 2022-8 §4.2.3)<br>✅ Spring Security supports PIPL-compliant granular consent scopes<br>❌ Go lacks certified FIPS 140-2 crypto modules for CBIRC audit<br>❌ Rust has insufficient regulatory reporting SDKs |",
+    "| **Database** | PostgreSQL 15, Cassandra 5.0, TiDB 7.5 | • Immutable ledger support<br>• 5-year retention scalability<br>• CBIRC 2020-12: “<5s query latency on 10B+ records” | **Cassandra 5.0 + Kafka** | ✅ Linear scalability to 100M+ cardholders<br>✅ Built-in TTL for hotlist records (CBIRC 2020-12 §3.1)<br>✅"
+  ],
+  "interface_design": {
+    "content": "---\n"
+  },
+  "data_flow": {
+    "content": "✅ Embedding **compliance-by-design**: All data flows enforce encryption-in-transit (TLS 1.3+), encryption-at-rest (AES-256-GCM), and immutable audit trails per CBIRC Guideline 2022-8 §4.2.\n"
+  },
+  "challenges": [
+    "To be defined"
+  ],
+  "implementation": {
+    "content": "This document is **not a speculative design**, but a *requirements-grounded, regulation-constrained, implementation-ready technical specification*. It directly addresses the critical gaps identified in the original requirements artifact by:\n"
+  },
+  "deployment": {
+    "content": "- `dev` (Kubernetes dev cluster, mocked dependencies)\n"
+  }
+}

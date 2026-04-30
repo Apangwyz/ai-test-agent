@@ -19,7 +19,7 @@ class CodingTaskGenerator:
         try:
             # Prepare prompt for AI model
             prompt = self._prepare_prompt(tech_doc)
-            system_prompt = "You are an expert project manager specializing in software development. Your task is to break down technical documentation into actionable coding tasks."
+            system_prompt = "你是一位专业的项目经理，专注于软件开发。你的任务是将技术文档分解为可执行的编码任务。请用中文回答。"
             
             try:
                 # Use AI service for advanced task generation
@@ -54,31 +54,31 @@ class CodingTaskGenerator:
         interface_design = tech_doc.get('interface_design', {}).get('content', '')
         
         prompt = f"""
-        Break down the following technical documentation into actionable coding tasks:
+        将以下技术文档分解为可执行的编码任务：
         
-        System Architecture:
+        系统架构：
         {architecture}
         
-        Technology Stack:
+        技术栈：
         {tech_stack}
         
-        Core Modules:
+        核心模块：
         {core_modules}
         
-        Interface Design:
+        接口设计：
         {interface_design}
         
-        For each task, provide:
-        1. Task ID
-        2. Task name
-        3. Description
-        4. Technical requirements
-        5. Inputs/outputs
-        6. Estimated time (hours) - should not exceed 8 hours per task
-        7. Dependencies (if any)
-        8. Priority
+        每个任务请提供：
+        1. 任务ID
+        2. 任务名称
+        3. 描述
+        4. 技术要求
+        5. 输入/输出
+        6. 预估时间（小时）- 每个任务不应超过8小时
+        7. 依赖关系（如有的话）
+        8. 优先级
         
-        The tasks should be granular enough to be completed in 8 hours or less, and should cover all aspects of the system implementation.
+        任务应足够细化，能够在8小时或更短时间内完成，并涵盖系统实现的所有方面。
         """
         return prompt
     
@@ -135,23 +135,24 @@ class CodingTaskGenerator:
                     'priority': 'medium'
                 }
             elif current_task:
-                # Parse task details
-                if 'description' in line.lower() and 'technical' not in line.lower():
+                # Parse task details - support both English and Chinese keywords
+                if ('description' in line.lower() or '描述' in line) and 'technical' not in line.lower() and '技术' not in line:
                     current_task['description'] = line.split(':', 1)[1].strip() if ':' in line else line
-                elif 'technical' in line.lower() and 'requirements' in line.lower():
+                elif ('technical' in line.lower() or '技术' in line) and ('requirements' in line.lower() or '要求' in line):
                     current_task['technical_requirements'] = line.split(':', 1)[1].strip() if ':' in line else line
-                elif 'input' in line.lower() or 'output' in line.lower():
+                elif 'input' in line.lower() or 'output' in line.lower() or '输入' in line or '输出' in line:
                     current_task['inputs_outputs'] = line.split(':', 1)[1].strip() if ':' in line else line
-                elif 'time' in line.lower() or 'estimate' in line.lower():
+                elif 'time' in line.lower() or 'estimate' in line.lower() or '时间' in line or '预估' in line:
                     try:
                         current_task['estimated_time'] = float(''.join(c for c in line if c.isdigit() or c == '.'))
                     except:
                         pass
-                elif 'dependency' in line.lower():
+                elif 'dependency' in line.lower() or '依赖' in line:
                     dependencies = line.split(':', 1)[1].strip() if ':' in line else line
                     current_task['dependencies'] = [dep.strip() for dep in dependencies.split(',')]
-                elif 'priority' in line.lower():
-                    current_task['priority'] = line.split(':', 1)[1].strip().lower() if ':' in line else line.lower()
+                elif 'priority' in line.lower() or '优先级' in line:
+                    priority_value = line.split(':', 1)[1].strip() if ':' in line else line
+                    current_task['priority'] = self._normalize_priority(priority_value)
         
         # Add the last task
         if current_task:
@@ -170,6 +171,27 @@ class CodingTaskGenerator:
         
         return tasks
     
+    def _normalize_priority(self, priority_value):
+        """
+        Normalize priority value to standard format (high/medium/low)
+        Supports both English and Chinese priority values
+        """
+        priority_map = {
+            'high': 'high',
+            'medium': 'medium',
+            'low': 'low',
+            '高': 'high',
+            '中': 'medium',
+            '低': 'low',
+            '高级': 'high',
+            '中级': 'medium',
+            '低级': 'low',
+            '高优先级': 'high',
+            '中优先级': 'medium',
+            '低优先级': 'low'
+        }
+        return priority_map.get(priority_value.lower(), 'medium')
+    
     def _get_default_task_list(self):
         """
         Get default task list
@@ -177,50 +199,50 @@ class CodingTaskGenerator:
         return [
             {
                 'id': 1,
-                'name': 'Set up project structure',
-                'description': 'Create the basic project structure and install dependencies',
-                'technical_requirements': 'Python, Flask, required libraries',
-                'inputs_outputs': 'Input: project requirements, Output: project structure',
+                'name': '项目结构搭建',
+                'description': '创建基础项目结构并安装依赖',
+                'technical_requirements': 'Python, Flask, 所需库',
+                'inputs_outputs': '输入: 项目需求, 输出: 项目结构',
                 'estimated_time': 2,
                 'dependencies': [],
                 'priority': 'high'
             },
             {
                 'id': 2,
-                'name': 'Implement core modules',
-                'description': 'Develop the core functionality modules',
-                'technical_requirements': 'Python, relevant libraries',
-                'inputs_outputs': 'Input: module specifications, Output: implemented modules',
+                'name': '核心模块实现',
+                'description': '开发核心功能模块',
+                'technical_requirements': 'Python, 相关库',
+                'inputs_outputs': '输入: 模块规格, 输出: 已实现模块',
                 'estimated_time': 8,
                 'dependencies': [1],
                 'priority': 'high'
             },
             {
                 'id': 3,
-                'name': 'Build API endpoints',
-                'description': 'Create RESTful API endpoints',
+                'name': 'API端点开发',
+                'description': '创建RESTful API端点',
                 'technical_requirements': 'Flask-RESTful',
-                'inputs_outputs': 'Input: API specifications, Output: API endpoints',
+                'inputs_outputs': '输入: API规格, 输出: API端点',
                 'estimated_time': 6,
                 'dependencies': [2],
                 'priority': 'high'
             },
             {
                 'id': 4,
-                'name': 'Implement authentication',
-                'description': 'Add user authentication and authorization',
+                'name': '认证系统实现',
+                'description': '添加用户认证和授权功能',
                 'technical_requirements': 'Flask-JWT-Extended',
-                'inputs_outputs': 'Input: authentication requirements, Output: auth system',
+                'inputs_outputs': '输入: 认证需求, 输出: 认证系统',
                 'estimated_time': 4,
                 'dependencies': [3],
                 'priority': 'medium'
             },
             {
                 'id': 5,
-                'name': 'Write tests',
-                'description': 'Create unit and integration tests',
+                'name': '测试用例编写',
+                'description': '创建单元测试和集成测试',
                 'technical_requirements': 'pytest',
-                'inputs_outputs': 'Input: codebase, Output: test suite',
+                'inputs_outputs': '输入: 代码库, 输出: 测试套件',
                 'estimated_time': 6,
                 'dependencies': [4],
                 'priority': 'medium'

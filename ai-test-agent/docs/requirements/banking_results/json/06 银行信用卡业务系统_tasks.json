@@ -1,0 +1,106 @@
+{
+  "version": "1.0",
+  "timestamp": 1777422958.2649577,
+  "tasks": [
+    {
+      "id": "1",
+      "name": "**Task ID**: `AUDIT-JFR-SIGN-001`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Enable cryptographically signed JFR recordings for audit log metadata per CBIRC 2022-8 §4",
+      "description": "Configure Spring Boot 3.2 (Java 17) to emit JFR recordings with SHA-256+RSA-2048 signatures embedded in recording metadata, ensuring tamper-evident audit trails for all transactional and authorization events.",
+      "technical_requirements": "",
+      "inputs_outputs": "Signed `.jfr` files in `/var/log/jfr/` with `signature: <base64>` in JFR header; unit test verifying signature validity",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "🔴 **p0 (critical)** — directly satisfies cbirc 2022-8 §4.2.3"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `PIPL-CONSENT-002`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Build granular, revocable, purpose-limited consent scopes using Spring Security OAuth2 Resource Server",
+      "description": "Extend Spring Security to enforce dynamic, user-granted consent scopes (e.g., `card:balance:read`, `transaction:history:export`) with audit logging of grant/revocation, expiry, and PIPL-required purpose justification.",
+      "technical_requirements": "",
+      "inputs_outputs": "Working REST API + integration tests; sample Postman collection; consent audit log schema for Cassandra",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "🔴 **p0 (critical)** — required for pipl article 13–14 compliance"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `DATA-CASS-003`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Create immutable, TTL-governed Cassandra tables for hotlist records and consent audits per CBIRC 2020-12 §3",
+      "description": "Define CQL schema for `hotlist_records` (card PAN + reason + timestamp) and `consent_audit_log` with `USING TTL = 155520000` (5 years), `default_time_to_live = 0`, and `compaction = {'class': 'TimeWindowCompactionStrategy'}`. Enforce immutability via application-layer write-only DAO.",
+      "technical_requirements": "",
+      "inputs_outputs": "Executed CQL DDL; `HotlistDao` interface + impl; Liquibase test harness validating TTL + immutability",
+      "estimated_time": 4.0,
+      "dependencies": [],
+      "priority": "🟠 **p1 (high)** — core to cbirc 2020-12 §3.1 & scalability requirement"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `INTG-KAFKA-SINK-004`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Deploy and configure Debezium-based Kafka sink to replicate hotlist updates from PostgreSQL 15 → Cassandra 5",
+      "description": "Implement CDC pipeline: PostgreSQL `hotlist_events` table → Kafka topic `hotlist.updates` → Cassandra `hotlist_records`. Use Kafka Connect with `cassandra-sink-connector` v2.5.0, configured for idempotent writes and tombstone handling.",
+      "technical_requirements": "",
+      "inputs_outputs": "Running Kafka Connect cluster; validated sync pipeline; latency report (JMeter script included)",
+      "estimated_time": 8,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "1",
+      "name": "**Task ID**: `DATA-PG-005`",
+      "description": "",
+      "technical_requirements": "",
+      "inputs_outputs": "",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    },
+    {
+      "id": "2",
+      "name": "**Task Name**: Create and optimize `hotlist_events` table in PostgreSQL 15 for low-latency lookups (<5s @ 10B+ rows) per CBIRC 2020-12",
+      "description": "Design partitioned, indexed table for PAN-based hotlist queries: range-partition by `created_at`, BRIN index on `pan_hash`, GIN index on `reason_codes`, and covering index for `SELECT status WHERE pan_hash = ? AND created_at > ?`.",
+      "technical_requirements": "",
+      "inputs_outputs": "`hotlist_events.sql` (DDL), `pgbench-hotlist",
+      "estimated_time": 4,
+      "dependencies": [],
+      "priority": "medium"
+    }
+  ]
+}
